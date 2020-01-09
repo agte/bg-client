@@ -2,6 +2,7 @@ import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import logo from './logo.svg';
 import './App.css';
+import client from './feathers';
 
 function App() {
   return (
