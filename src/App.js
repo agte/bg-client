@@ -3,33 +3,39 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link as RouterLink
 } from "react-router-dom";
 import { createBrowserHistory } from 'history';
+
 import CssBaseline from '@material-ui/core/CssBaseline';
-import './App.css';
-import SignIn from './components/SignIn.js';
-import SignOut from './components/SignOut.js';
-import SignUp from './components/SignUp.js';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 
 import client from './feathers';
 
-const browserHistory = createBrowserHistory();
+import './App.css';
 
-function Main() {
-  return (<div>Главная</div>);
-}
+import SignIn from './pages/SignIn.js';
+import SignUp from './pages/SignUp.js';
+import GuestMain from './pages/GuestMain.js';
+
+import SignOut from './components/SignOut.js';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { user: null, authenticated: false };
+
     client
       .authentication.getAccessToken()
       .then((token) => token ? client.reAuthenticate() : null);
+
     client.on('login', ({ user }) => {
       this.setState({ user, authenticated: true });
     });
+
     client.on('logout', () => {
       this.setState({ user: null, authenticated: false });
     });
@@ -40,27 +46,25 @@ class App extends React.Component {
       <React.Fragment>
         <CssBaseline />
         <div className="App">
-          <Router history={browserHistory}>
+          <Router history={createBrowserHistory()}>
+            <AppBar position="static">
+              <Toolbar>
+                <Typography variant="h5">
+                  <Link component={RouterLink} color="inherit" underline="none" to="/">
+                    Мухожук
+                  </Link>
+                </Typography>
+              </Toolbar>
+            </AppBar>
             <Switch>
-              <Route path="/sign-in">
-                <Link to='/'>На главную</Link>
-                <SignIn />
-              </Route>
-              <Route path="/sign-out">
-                <Link to='/'>На главную</Link>
-                <SignOut />
-              </Route>
-              <Route path="/sign-up">
-                <Link to='/'>На главную</Link>
-                <SignUp />
-              </Route>
-              <Route path="/">
-                {!this.state.authenticated ? <Link to='/sign-in'>Войти</Link> : null}
-                {this.state.authenticated ? <Link to='/sign-out'>Выйти</Link> : null}
-                {!this.state.authenticated ? <Link to='/sign-up'>Зарегистрироваться</Link> : null}
-                <Main />
-              </Route>
+              <Route path="/sign-in"><SignIn /></Route>
+              <Route path="/sign-up"><SignUp /></Route>
+              <Route path="/sign-out"><SignOut /></Route>
+              <Route path="/">{!this.state.authenticated ? <GuestMain /> : null}</Route>
             </Switch>
+            <footer>
+              {this.state.authenticated ? <RouterLink to='/sign-out'>Выйти</RouterLink> : null}
+            </footer>
           </Router>
         </div>
       </React.Fragment>
