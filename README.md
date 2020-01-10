@@ -66,3 +66,31 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+# Локальный запуск
+
+Чтобы локально запустить приложение в режиме development, надо выполнить два условия:
+  1. Запустить серверный API локально или на удалённом компьютере.
+  2. Указать адрес этого API в переменной окружения "REACT_APP_API_URL".
+
+Задать переменную окружения для текущего проекта можно несколькими способами.
+Для наглядности предположим, что API расположен по адресу http://localhost:5000/.
+
+## Через консоль
+
+```sh
+~$ export API_URL=http://localhost:5000/
+~$ yarn start
+```
+
+## Через файл
+
+Создайте файл с именем .env.local и примерно таким содержимым:
+
+```
+REACT_APP_API_URL=http://localhost:5000/
+```
+
+Можете не беспокоиться - файл .env.local не попадёт в репозиторий.
+
+Согласно официальной документации, скрипты, созданные при помощи create-react-app, "видят" только переменные окружения с префиксом REACT_APP_. В текущем же проекте переменная REACT_APP_API_URL дополнительно соотносится с переменной API_URL при помощи файла .env (посмотрите его содержимое). Не обязательно так делать, но имя API_URL явно короче и не привязано к фреймворку, что выглядит проще со стороны.
