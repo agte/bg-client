@@ -19,26 +19,38 @@ import './App.css';
 
 import SignIn from './pages/SignIn.js';
 import SignUp from './pages/SignUp.js';
+import SignOut from './pages/SignOut.js';
 import GuestMain from './pages/GuestMain.js';
-
-import SignOut from './components/SignOut.js';
+import Main from './pages/Main.js';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { user: null, authenticated: false };
+    this.state = { user: null, auth: false }; // "authenticated" is to long so let's use "auth"
+    this.onLogin = this.onLogin.bind(this);
+    this.onLogout = this.onLogout.bind(this);
+  }
 
+  componentDidMount() {
     client
       .authentication.getAccessToken()
-      .then((token) => token ? client.reAuthenticate() : null);
+      .then((token) => token && client.reAuthenticate());
 
-    client.on('login', ({ user }) => {
-      this.setState({ user, authenticated: true });
-    });
+    client.on('login', this.onLogin);
+    client.on('logout', this.onLogout);
+  }
 
-    client.on('logout', () => {
-      this.setState({ user: null, authenticated: false });
-    });
+  componentWillUnmount() {
+    client.off('login', this.onLogin);
+    client.off('logout', this.onLogout);
+  }
+
+  onLogin({ user }) {
+    this.setState({ user, auth: true });
+  }
+
+  onLogout() {
+    this.setState({ user: null, auth: false });
   }
 
   render() {
@@ -54,17 +66,16 @@ class App extends React.Component {
                     Мухожук
                   </Link>
                 </Typography>
+                <div style={{flexGrow: 1}}></div>
+                {this.state.auth && <Link component={RouterLink} color="inherit" to='/sign-out'>Выйти</Link>}
               </Toolbar>
             </AppBar>
             <Switch>
               <Route path="/sign-in"><SignIn /></Route>
               <Route path="/sign-up"><SignUp /></Route>
               <Route path="/sign-out"><SignOut /></Route>
-              <Route path="/">{!this.state.authenticated ? <GuestMain /> : null}</Route>
+              <Route path="/">{!this.state.auth ? <GuestMain /> : <Main />}</Route>
             </Switch>
-            <footer>
-              {this.state.authenticated ? <RouterLink to='/sign-out'>Выйти</RouterLink> : null}
-            </footer>
           </Router>
         </div>
       </React.Fragment>

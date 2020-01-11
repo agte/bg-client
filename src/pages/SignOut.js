@@ -1,7 +1,9 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
+
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
+
 import client from '../feathers';
 
 class SignOut extends React.Component {
@@ -15,22 +17,24 @@ class SignOut extends React.Component {
     client
       .logout()
       .then(() => { this.props.history.push('/'); })
-      .catch((e) => { alert(e.message); });
+      .catch((e) => { alert(JSON.stringify(e)); });
   }
 
   render() {
     return (
       <Container component="main" maxWidth="xs">
-        <Button
-          color="primary"
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          onClick={this.onSubmit}
-        >
-          Sign Out
-        </Button>
+        <p>
+          <Button
+            color="primary"
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            onClick={this.onSubmit}
+          >
+            Готово
+          </Button>
+        </p>
       </Container>
     );
   }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from 'react-router-dom';
+
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -8,7 +9,7 @@ class GuestMain extends React.Component {
   render() {
     return (
       <Container component="main" maxWidth="xs">
-        <Typography variant="h5" align="center" style={{marginTop: "1em"}} >
+        <Typography component="h1" variant="h5" align="center" style={{marginTop: "1em"}} >
           Настольные игры онлайн
         </Typography>
         <p>

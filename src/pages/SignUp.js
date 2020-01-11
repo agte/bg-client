@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -28,7 +28,7 @@ class SignUp extends React.Component {
   render() {
     return (
       <Container component="main" maxWidth="xs">
-        <Typography component="h1" align="center" gutterBottom>Зарегистрироваться</Typography>
+        <Typography component="h1" variant="h5" align="center" style={{marginTop: "1em"}} >Зарегистрироваться</Typography>
         <form onSubmit={this.onSubmit}>
           <TextField
             autoComplete="email"
@@ -62,7 +62,7 @@ class SignUp extends React.Component {
             type="submit"
             variant="contained"
           >
-            Sign Up
+            Готово
           </Button>
         </form>
       </Container>

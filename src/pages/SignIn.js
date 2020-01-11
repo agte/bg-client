@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -20,13 +20,13 @@ class SignIn extends React.Component {
     client
       .authenticate({ strategy: 'local', email, password })
       .then(() => { this.props.history.push('/'); })
-      .catch((e) => { alert(e.message); });
+      .catch((e) => { alert(JSON.stringify(e)); });
   }
 
   render() {
     return (
       <Container component="main" maxWidth="xs">
-        <Typography component="h1" align="center" gutterBottom>Войти</Typography>
+        <Typography component="h1" variant="h5" align="center" style={{marginTop: "1em"}} >Войти</Typography>
         <form onSubmit={this.onSubmit}>
           <TextField
             autoComplete="email"
@@ -60,7 +60,7 @@ class SignIn extends React.Component {
             type="submit"
             variant="contained"
           >
-            Sign Up
+            Готово
           </Button>
         </form>
       </Container>
