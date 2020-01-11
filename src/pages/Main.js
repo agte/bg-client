@@ -54,7 +54,7 @@ class Main extends React.Component {
     const gameCards = this.state.games.map((game) => <GameCard key={game.id} game={game} />);
     return (
       <Container component="main" maxWidth="xs">
-        <Typography component="h1" variant="h4" align="center" gutterBottom style={{marginTop: "1em"}}>
+        <Typography variant="h1" align="center" gutterBottom>
           Доступные игры
         </Typography>
         {gameCards}

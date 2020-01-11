@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   Switch,
   Route,
   Link as RouterLink
 } from "react-router-dom";
-import { createBrowserHistory } from 'history';
 
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -22,6 +22,33 @@ import SignUp from './pages/SignUp.js';
 import SignOut from './pages/SignOut.js';
 import GuestMain from './pages/GuestMain.js';
 import Main from './pages/Main.js';
+
+const theme = createMuiTheme({
+  typography: {
+    h1: {
+      fontSize: '2.0rem',
+      marginTop: '1em',
+    },
+    h2: {
+      fontSize: '1.75rem',
+    },
+    h3: {
+      fontSize: '1.5rem',
+    },
+    h4: {
+      fontSize: '1.33rem',
+      fontWeight: 700,
+    },
+    h5: {
+      fontSize: '1.25rem',
+      fontWeight: 700,
+    },
+    h6: {
+      fontSize: '1rem',
+      fontWeight: 700,
+    },
+  },
+});
 
 class App extends React.Component {
   constructor(props) {
@@ -58,25 +85,27 @@ class App extends React.Component {
       <React.Fragment>
         <CssBaseline />
         <div className="App">
-          <Router history={createBrowserHistory()}>
-            <AppBar position="static">
-              <Toolbar>
-                <Typography variant="h5">
-                  <Link component={RouterLink} color="inherit" underline="none" to="/">
-                    Мухожук
-                  </Link>
-                </Typography>
-                <div style={{flexGrow: 1}}></div>
-                {this.state.auth && <Link component={RouterLink} color="inherit" to='/sign-out'>Выйти</Link>}
-              </Toolbar>
-            </AppBar>
-            <Switch>
-              <Route path="/sign-in"><SignIn /></Route>
-              <Route path="/sign-up"><SignUp /></Route>
-              <Route path="/sign-out"><SignOut /></Route>
-              <Route path="/">{!this.state.auth ? <GuestMain /> : <Main />}</Route>
-            </Switch>
-          </Router>
+          <ThemeProvider theme={theme}>
+            <BrowserRouter>
+              <AppBar position="static">
+                <Toolbar>
+                  <Typography variant="h4" component="div">
+                    <Link component={RouterLink} color="inherit" underline="none" to="/">
+                      Мухожук
+                    </Link>
+                  </Typography>
+                  <div style={{flexGrow: 1}}></div>
+                  {this.state.auth && <Link component={RouterLink} color="inherit" to='/sign-out'>Выйти</Link>}
+                </Toolbar>
+              </AppBar>
+              <Switch>
+                <Route path="/sign-in"><SignIn /></Route>
+                <Route path="/sign-up"><SignUp /></Route>
+                <Route path="/sign-out"><SignOut /></Route>
+                <Route path="/">{!this.state.auth ? <GuestMain /> : <Main />}</Route>
+              </Switch>
+            </BrowserRouter>
+          </ThemeProvider>
         </div>
       </React.Fragment>
     );

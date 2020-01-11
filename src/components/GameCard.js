@@ -27,10 +27,10 @@ class GameCard extends React.Component {
     return (
       <Card>
         <CardContent>
-          <Typography variant='h6' align="center">
+          <Typography variant='h2' align="center">
             {this.state.name}
           </Typography>
-          <Typography variant='body2' align="center">
+          <Typography variant='body1' align="center">
             Минимум игроков: {this.state.minPlayers}<br />
             Максимум игроков: {this.state.maxPlayers}
           </Typography>

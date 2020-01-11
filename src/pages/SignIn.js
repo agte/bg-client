@@ -26,7 +26,7 @@ class SignIn extends React.Component {
   render() {
     return (
       <Container component="main" maxWidth="xs">
-        <Typography component="h1" variant="h5" align="center" style={{marginTop: "1em"}} >Войти</Typography>
+        <Typography variant="h1" align="center">Войти</Typography>
         <form onSubmit={this.onSubmit}>
           <TextField
             autoComplete="email"

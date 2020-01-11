@@ -9,9 +9,7 @@ class GuestMain extends React.Component {
   render() {
     return (
       <Container component="main" maxWidth="xs">
-        <Typography component="h1" variant="h5" align="center" style={{marginTop: "1em"}} >
-          Настольные игры онлайн
-        </Typography>
+        <Typography variant="h1" align="center">Настольные игры онлайн</Typography>
         <p>
           <Button
             color="primary"
