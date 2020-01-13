@@ -20,7 +20,7 @@ class GameCard extends React.Component {
 
   async onStartPlay(e) {
     const match = await this.matchesService.create({ game: this.state.id });
-    this.props.history.push(`/games/${this.state.id}/matches/${match.id}`);
+    this.props.history.push(`/matches/${match.id}`);
   }
 
   render() {

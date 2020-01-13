@@ -17,11 +17,12 @@ import client from './feathers';
 
 import './App.css';
 
+import GuestMain from './pages/GuestMain.js';
 import SignIn from './pages/SignIn.js';
 import SignUp from './pages/SignUp.js';
-import SignOut from './pages/SignOut.js';
-import GuestMain from './pages/GuestMain.js';
 import Main from './pages/Main.js';
+import SignOut from './pages/SignOut.js';
+import Match from './pages/Match.js';
 
 const theme = createMuiTheme({
   typography: {
@@ -61,7 +62,10 @@ class App extends React.Component {
   componentDidMount() {
     client
       .authentication.getAccessToken()
-      .then((token) => token && client.reAuthenticate());
+      .then((token) => token && client.reAuthenticate())
+      .catch((e) => {
+        console.log(e);
+      });
 
     client.on('login', this.onLogin);
     client.on('logout', this.onLogout);
@@ -102,6 +106,7 @@ class App extends React.Component {
                 <Route path="/sign-in"><SignIn /></Route>
                 <Route path="/sign-up"><SignUp /></Route>
                 <Route path="/sign-out"><SignOut /></Route>
+                <Route path="/matches/:matchId"><Match /></Route>
                 <Route path="/">{!this.state.auth ? <GuestMain /> : <Main />}</Route>
               </Switch>
             </BrowserRouter>

@@ -1,28 +1,23 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 import client from '../feathers';
 
-import GameCard from '../components/GameCard.js';
+// import MatchCard from '../components/MatchCard.js';
 
-class Main extends React.Component {
+class PublicMatches extends React.Component {
   constructor(props) {
     super(props);
     this.gamesService = client.service('games');
-    this.state = { games: [] };
-    this.onGameCreated = this.onGameCreated.bind(this);
-    this.onGamePatched = this.onGamePatched.bind(this);
-    this.onGameRemoved = this.onGameRemoved.bind(this);
+    this.matchesService = client.service('matches');
+    this.state = { games: {}, matches: [] };
   }
 
   componentDidMount() {
-    this.gamesService.on('created', this.onGameCreated);
-    this.gamesService.on('patched', this.onGamePatched);
-    this.gamesService.on('removed', this.onGameRemoved);
-
-    this.gamesService
+    this.matchesService
       .find({ limit: -1 })
       .then(({ data }) => {
         this.setState({ games: data });
@@ -64,4 +59,4 @@ class Main extends React.Component {
   }
 }
 
-export default Main;
+export default withRouter(PublicMatches);
