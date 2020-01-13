@@ -16,13 +16,22 @@ class SignUp extends React.Component {
 
   onSubmit(event) {
     event.preventDefault();
-    const { email: { value: email }, password: { value: password } } = event.target.elements;
+
+    const {
+      email: { value: email },
+      password: { value: password },
+      name: { value: name },
+    } = event.target.elements;
+    
     client
       .service('users')
-      .create({ email, password })
+      .create({ email, password, name })
       .then(() => client.authenticate({ strategy: 'local', email, password }))
       .then(() => { this.props.history.push('/'); })
-      .catch((e) => { alert(e.message); });
+      .catch((e) => {
+        console.error(e);
+        alert('Произошла ошибка. Свяжитесь с администратором сайта.');
+      });
   }
 
   render() {
@@ -35,7 +44,7 @@ class SignUp extends React.Component {
             autoFocus
             fullWidth
             id="email"
-            label="Email Address"
+            label="Email"
             margin="normal"
             name="email"
             required
@@ -47,12 +56,23 @@ class SignUp extends React.Component {
             autoComplete="current-password"
             fullWidth
             id="password"
-            label="Password"
+            label="Пароль"
             margin="normal"
             name="password"
             required
             size="medium"
             type="password"
+            variant="outlined"
+          />
+          <TextField
+            autoComplete="username"
+            fullWidth
+            id="name"
+            label="Имя"
+            margin="normal"
+            name="name"
+            required
+            size="medium"
             variant="outlined"
           />
           <Button

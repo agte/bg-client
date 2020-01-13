@@ -20,7 +20,10 @@ class SignIn extends React.Component {
     client
       .authenticate({ strategy: 'local', email, password })
       .then(() => { this.props.history.push('/'); })
-      .catch((e) => { alert(JSON.stringify(e)); });
+      .catch((e) => {
+        console.error(e);
+        alert('Произошла ошибка. Свяжитесь с администратором сайта.');
+      });
   }
 
   render() {
@@ -30,10 +33,9 @@ class SignIn extends React.Component {
         <form onSubmit={this.onSubmit}>
           <TextField
             autoComplete="email"
-            autoFocus
             fullWidth
             id="email"
-            label="Email Address"
+            label="Email"
             margin="normal"
             name="email"
             required
@@ -45,7 +47,7 @@ class SignIn extends React.Component {
             autoComplete="current-password"
             fullWidth
             id="password"
-            label="Password"
+            label="Пароль"
             margin="normal"
             name="password"
             required
