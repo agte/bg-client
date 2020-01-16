@@ -19,9 +19,9 @@ const STATUSES = {
 class MatchItem extends React.Component {
   constructor(props) {
     super(props);
-    this.matchService = client.service('matches');
-    this.statusService = client.service(`matches/${this.props.gameMatch.id}/status`);
-    this.playersService = client.service(`matches/${this.props.gameMatch.id}/players`);
+    this.Match = client.service('matches');
+    this.Status = client.service(`matches/${this.props.gameMatch.id}/status`);
+    this.Player = client.service(`matches/${this.props.gameMatch.id}/players`);
     this.startGathering = this.startGathering.bind(this);
     this.cancelGathering = this.cancelGathering.bind(this);
     this.remove = this.remove.bind(this);
@@ -30,23 +30,23 @@ class MatchItem extends React.Component {
   }
 
   startGathering() {
-    this.statusService.update(null, { value: 'gathering' });
+    this.Status.update(null, { value: 'gathering' });
   }
 
   cancelGathering() {
-    this.statusService.update(null, { value: 'draft' });
+    this.Status.update(null, { value: 'draft' });
   }
 
   remove() {
-    this.matchService.remove(this.props.gameMatch.id);
+    this.Match.remove(this.props.gameMatch.id);
   }
 
   join() {
-    this.playersService.create({});
+    this.Player.create({});
   }
 
   leave() {
-    this.playersService.remove(client.user.id);
+    this.Player.remove(client.user.id);
   }
 
   render() {
@@ -64,15 +64,24 @@ class MatchItem extends React.Component {
         actions.push(<Button key="switch_to_draft" onClick={this.cancelGathering}>Отменить сбор</Button>);
       }
       if (match.status === 'draft' || match.status === 'gathering') {
+        if (match.players.some((player) => player.id === client.user.id)) {
+          actions.push(<Button key="leave" onClick={this.leave}>Выйти</Button>);
+        } else {
+          actions.push(<Button key="join" onClick={this.join}>Присоединиться</Button>);
+        }
         actions.push(<Button key="remove" onClick={this.remove}>Удалить</Button>);
       }
     } else { // Прочие пользователи
-      if (match.players.includes(client.user.id)) {
+      if (match.players.some((player) => player.id === client.user.id)) {
         actions.push(<Button key="leave" onClick={this.leave}>Выйти</Button>);
       } else if (match.status === 'gathering') {
         actions.push(<Button key="join" onClick={this.join}>Присоединиться</Button>);
       }
     }
+
+    const players = match.players.map((player) => {
+      return <li key={player.id}>{player.name}</li>;
+    });
 
     return (
       <TableRow>
@@ -80,7 +89,7 @@ class MatchItem extends React.Component {
         <TableCell>{STATUSES[match.status]}</TableCell>
         <TableCell>{date.toLocaleTimeString()} {date.toLocaleDateString()}</TableCell>
         <TableCell>{match.minPlayers}</TableCell>
-        <TableCell>{match.players.length}</TableCell>
+        <TableCell><ul>{players}</ul></TableCell>
         <TableCell>{actions}</TableCell>
       </TableRow>
     );

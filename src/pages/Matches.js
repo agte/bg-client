@@ -115,8 +115,8 @@ class Matches extends React.Component {
                 <TableCell>Игра</TableCell>
                 <TableCell>Статус</TableCell>
                 <TableCell>Дата создания</TableCell>
-                <TableCell>Всего игроков</TableCell>
-                <TableCell>Подключено игроков</TableCell>
+                <TableCell>Ожидаемо игроков</TableCell>
+                <TableCell>Игроков подключено</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
