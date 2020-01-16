@@ -23,6 +23,7 @@ import SignUp from './pages/SignUp.js';
 import Main from './pages/Main.js';
 import SignOut from './pages/SignOut.js';
 import Match from './pages/Match.js';
+import Matches from './pages/Matches.js';
 
 const theme = createMuiTheme({
   typography: {
@@ -77,10 +78,12 @@ class App extends React.Component {
   }
 
   onLogin({ user }) {
+    client.user = user;
     this.setState({ user, auth: true });
   }
 
   onLogout() {
+    client.user = null;
     this.setState({ user: null, auth: false });
   }
 
@@ -107,6 +110,7 @@ class App extends React.Component {
                 <Route path="/sign-up"><SignUp /></Route>
                 <Route path="/sign-out"><SignOut /></Route>
                 <Route path="/matches/:matchId"><Match /></Route>
+                <Route path="/matches"><Matches /></Route>
                 <Route path="/">{!this.state.auth ? <GuestMain /> : <Main />}</Route>
               </Switch>
             </BrowserRouter>
