@@ -13,7 +13,7 @@ import client from '../feathers';
 class GameCard extends React.Component {
   constructor(props) {
     super(props);
-    this.Match = client.service('matches');
+    this.Match = client.service('match');
     this.state = { ...props.game };
     this.onStartPlay = this.onStartPlay.bind(this);
   }

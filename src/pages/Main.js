@@ -10,7 +10,7 @@ import GameCard from '../components/GameCard.js';
 class Main extends React.Component {
   constructor(props) {
     super(props);
-    this.gamesService = client.service('games');
+    this.gamesService = client.service('game');
     this.state = { games: [] };
     this.onGameCreated = this.onGameCreated.bind(this);
     this.onGamePatched = this.onGamePatched.bind(this);

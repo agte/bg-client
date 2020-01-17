@@ -18,8 +18,8 @@ import MatchItem from '../components/MatchItem.js';
 class Matches extends React.Component {
   constructor(props) {
     super(props);
-    this.gamesService = client.service('games');
-    this.matchesService = client.service('matches');
+    this.gamesService = client.service('game');
+    this.matchesService = client.service('match');
     this.state = {
       games: {},
       matches: {

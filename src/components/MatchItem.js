@@ -19,9 +19,9 @@ const STATUSES = {
 class MatchItem extends React.Component {
   constructor(props) {
     super(props);
-    this.Match = client.service('matches');
-    this.Status = client.service(`matches/${this.props.gameMatch.id}/status`);
-    this.Player = client.service(`matches/${this.props.gameMatch.id}/players`);
+    this.Match = client.service('match');
+    this.Status = client.service(`match/${this.props.gameMatch.id}/status`);
+    this.Player = client.service(`match/${this.props.gameMatch.id}/players`);
     this.startGathering = this.startGathering.bind(this);
     this.cancelGathering = this.cancelGathering.bind(this);
     this.remove = this.remove.bind(this);

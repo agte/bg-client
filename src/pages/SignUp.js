@@ -24,7 +24,7 @@ class SignUp extends React.Component {
     } = event.target.elements;
     
     client
-      .service('users')
+      .service('user')
       .create({ email, password, name })
       .then(() => client.authenticate({ strategy: 'local', email, password }))
       .then(() => { this.props.history.push('/'); })
