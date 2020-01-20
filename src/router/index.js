@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
+import SignIn from '../views/SignIn.vue';
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,11 @@ const routes = [
     component() {
       return import(/* webpackChunkName: "about" */ '../views/About.vue');
     },
+  },
+  {
+    path: '/sign-in',
+    name: 'sign-in',
+    component: SignIn,
   },
 ];
 
