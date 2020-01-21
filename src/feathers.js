@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
 
 import { iff, discard } from 'feathers-hooks-common';
-// import feathersVuex from 'feathers-vuex';
+import feathersVuex from 'feathers-vuex';
 
 const socket = io(process.env.VUE_APP_API_URL, { transports: ['websocket'] });
 const client = feathers();
@@ -13,7 +13,7 @@ client.hooks({
   before: {
     all: [
       iff(
-        context => ['create', 'update', 'patch'].includes(context.method),
+        (context) => ['create', 'update', 'patch'].includes(context.method),
         discard('__id', '__isTemp'),
       ),
     ],
@@ -22,25 +22,25 @@ client.hooks({
 
 export default client;
 
-// const {
-//   makeServicePlugin,
-//   makeAuthPlugin,
-//   BaseModel,
-//   models,
-//   FeathersVuex,
-// } = feathersVuex(
-//   client,
-//   {
-//     serverAlias: 'api',
-//     idField: 'id',
-//     whitelist: ['$regex', '$options'],
-//   },
-// );
+const {
+  makeServicePlugin,
+  makeAuthPlugin,
+  BaseModel,
+  models,
+  FeathersVuex,
+} = feathersVuex(
+  client,
+  {
+    serverAlias: 'api',
+    idField: 'id',
+    whitelist: ['$regex', '$options'],
+  },
+);
 
-// export {
-//   makeAuthPlugin,
-//   makeServicePlugin,
-//   BaseModel,
-//   models,
-//   FeathersVuex,
-// };
+export {
+  makeAuthPlugin,
+  makeServicePlugin,
+  BaseModel,
+  models,
+  FeathersVuex,
+};

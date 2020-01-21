@@ -11,7 +11,7 @@
   "dependencies": {
     "@feathersjs/client": "^4.5.0",
     "@feathersjs/feathers": "^4.5.0",
-    "@mdi/font": "^3.6.95",
+    "@mdi/font": "^4.8.95",
     "feathers-hooks-common": "^5.0.1",
     "feathers-vuex": "^3.4.0",
     "roboto-fontface": "*",
@@ -22,22 +22,25 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
     "@vue/cli-plugin-router": "^4.1.0",
     "@vue/cli-plugin-unit-jest": "^4.1.0",
     "@vue/cli-plugin-vuex": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
-    "@vue/eslint-config-airbnb": "^4.0.0",
-    "@vue/test-utils": "1.0.0-beta.29",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "@vue/test-utils": "1.0.0-beta.31",
     "babel-eslint": "^10.0.3",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-vue": "^6.1.2",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-vuetify": "^2.0.3",
     "vue-template-compiler": "^2.6.10",
-    "vuetify-loader": "^1.3.0"
+    "vuetify-loader": "^1.3.0",
+    "webpack": "^4.41.5"
   }
 }
