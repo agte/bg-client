@@ -1,14 +1,22 @@
 <style scoped>
-.sign-in {
+.register {
   max-width: 480px;
   margin: 0 auto;
 }
 </style>
 
 <template>
-  <v-container class="sign-in" fluid>
-    <v-form class="pt-5" @submit.prevent="login">
+  <v-container class="register" fluid>
+    <v-form @submit.prevent="register">
       <v-alert v-if="error.message" type="error">{{ error.message }}</v-alert>
+      <v-text-field
+        v-model="name"
+        name="name"
+        type="text"
+        label="Имя"
+        outlined
+        autofocus
+      ></v-text-field>
       <v-text-field
         v-model="email"
         name="email"
@@ -30,38 +38,42 @@
         color="primary"
         block
         large
-      >Войти</v-btn>
+      >Зарегистрироваться</v-btn>
     </v-form>
   </v-container>
 </template>
 
 <script>
 export default {
-  name: 'SignIn',
+  name: 'Register',
   data: () => ({
     email: '',
     password: '',
+    name: '',
     showPassword: false,
     error: {},
   }),
   methods: {
-    login() {
-      this.$store
-        .dispatch('auth/authenticate', {
+    async register() {
+      const { User } = this.$FeathersVuex.api;
+      try {
+        const user = new User({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+        });
+        await user.save();
+        this.$store.dispatch('auth/authenticate', {
           strategy: 'local',
           email: this.email,
           password: this.password,
-        })
-        .then(
-          () => this.$router.push({ name: 'Home' }),
-          (e) => {
-            this.error = {
-              message: e.className === 'not-authenticated'
-                ? 'Неправильный email или пароль.'
-                : 'Возникла непредвиденная ошибка. Обратитесь к администратору сайта.',
-            };
-          },
-        );
+        });
+        this.$router.push({ name: 'Home' });
+      } catch (e) {
+        this.error = {
+          message: e.message,
+        };
+      }
     },
   },
 };

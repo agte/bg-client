@@ -10,11 +10,7 @@ class User extends BaseModel {
 
   // Define default properties here
   static instanceDefaults() {
-    return {
-      roles: [],
-      email: '',
-      password: '',
-    };
+    return {};
   }
 }
 

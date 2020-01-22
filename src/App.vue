@@ -30,8 +30,8 @@
       <v-spacer></v-spacer>
 
       <v-btn
-        v-if="$route.path != '/sign-in'"
-        to="/sign-in"
+        v-if="$route.name != 'Login'"
+        :to="{ name: 'Login' }"
         text
       >
         <span class="mr-1">Войти</span>
