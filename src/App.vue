@@ -24,13 +24,15 @@
         />
         <v-toolbar-title
           class="font-weight-regular title white--text toolbar-title"
-        >Мухожук</v-toolbar-title>
+        >
+          Мухожук
+        </v-toolbar-title>
       </router-link>
 
       <v-spacer></v-spacer>
 
       <v-btn
-        v-if="$route.name != 'Login'"
+        v-if="$route.name != 'Login' && !$store.state.auth.user"
         :to="{ name: 'Login' }"
         text
       >
@@ -48,5 +50,14 @@
 <script>
 export default {
   name: 'App',
+  mounted() {
+    this.$store
+      .dispatch('auth/authenticate')
+      .catch((e) => {
+        if (!e.message.includes('Could not find stored JWT')) {
+          console.error(e);
+        }
+      });
+  },
 };
 </script>
