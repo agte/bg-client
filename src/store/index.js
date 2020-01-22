@@ -21,5 +21,5 @@ export default new Vuex.Store({
   },
   actions: {
   },
-  modules: services,
+  plugins: services,
 });

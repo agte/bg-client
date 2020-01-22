@@ -35,28 +35,31 @@
 </template>
 
 <script>
-import client from '@/feathers.js';
-
 export default {
   name: 'SignIn',
   data: () => ({
     email: '',
     password: '',
+    showPassword: false,
   }),
   methods: {
     login() {
-      client
-        .authenticate({
+      this.$store
+        .dispatch('auth/authenticate', {
           strategy: 'local',
           email: this.email,
           password: this.password,
         })
-        .then(() => {
-          this.$router.push('/');
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+        .then(
+          () => this.$router.push({ name: 'Home' }),
+          (e) => {
+            this.error = {
+              message: e.className === 'not-authenticated'
+                ? 'Неправильный email или пароль.'
+                : 'Возникла непредвиденная ошибка. Обратитесь к администратору сайта.',
+            };
+          },
+        );
     },
   },
 };
