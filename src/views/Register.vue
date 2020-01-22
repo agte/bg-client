@@ -8,7 +8,7 @@
 <template>
   <v-container class="register" fluid>
     <v-form @submit.prevent="register">
-      <v-alert v-if="error.message" type="error">{{ error.message }}</v-alert>
+      <v-alert v-if="error" type="error">{{ error.message }}</v-alert>
       <v-text-field
         v-model="name"
         name="name"
@@ -44,37 +44,40 @@
 </template>
 
 <script>
+import { ref } from '@vue/composition-api';
+
 export default {
-  name: 'Register',
-  data: () => ({
-    email: '',
-    password: '',
-    name: '',
-    showPassword: false,
-    error: {},
-  }),
-  methods: {
-    async register() {
-      const { User } = this.$FeathersVuex.api;
+  /* eslint-disable no-shadow */
+  setup(props, context) {
+    const { $store, $router } = context.root;
+    const { User } = context.root.$FeathersVuex.api;
+
+    const email = ref('');
+    const password = ref('');
+    const name = ref('');
+    const showPassword = ref(false);
+    const error = ref(null);
+
+    const register = async (email, password, name) => {
       try {
-        const user = new User({
-          name: this.name,
-          email: this.email,
-          password: this.password,
-        });
+        const user = new User({ email, password, name: name || email });
         await user.save();
-        this.$store.dispatch('auth/authenticate', {
-          strategy: 'local',
-          email: this.email,
-          password: this.password,
-        });
-        this.$router.push({ name: 'Home' });
+        $store.dispatch('auth/authenticate', { strategy: 'local', email, password });
+        $router.push({ name: 'Home' });
       } catch (e) {
-        this.error = {
-          message: e.message,
-        };
+        error.value = { message: e.message };
       }
-    },
+    };
+
+    return {
+      name,
+      email,
+      password,
+      showPassword,
+      error,
+      register,
+    };
   },
+  /* eslint-enable no-shadow */
 };
 </script>

@@ -39,6 +39,15 @@
         <span class="mr-1">Войти</span>
         <v-icon>mdi-login</v-icon>
       </v-btn>
+
+      <v-btn
+        v-if="$store.state.auth.user"
+        text
+        @click="logout()"
+      >
+        <span class="mr-1">Выйти</span>
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <v-content>
@@ -48,16 +57,26 @@
 </template>
 
 <script>
+import { onMounted } from '@vue/composition-api';
+
 export default {
-  name: 'App',
-  mounted() {
-    this.$store
-      .dispatch('auth/authenticate')
-      .catch((e) => {
-        if (!e.message.includes('Could not find stored JWT')) {
-          console.error(e);
-        }
-      });
+  setup(props, context) {
+    const { $store } = context.root;
+
+    const logout = () => $store.dispatch('auth/logout');
+
+    onMounted(() => {
+      $store.dispatch('auth/authenticate')
+        .catch((e) => {
+          if (!e.message.includes('Could not find stored JWT')) {
+            console.error(e);
+          }
+        });
+    });
+
+    return {
+      logout,
+    };
   },
 };
 </script>
