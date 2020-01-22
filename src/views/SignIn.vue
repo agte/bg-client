@@ -8,6 +8,7 @@
 <template>
   <v-container class="sign-in" fluid>
     <v-form class="pt-5" @submit.prevent="login">
+      <v-alert v-if="error.message" type="error">{{ error.message }}</v-alert>
       <v-text-field
         v-model="email"
         name="email"
@@ -41,6 +42,7 @@ export default {
     email: '',
     password: '',
     showPassword: false,
+    error: {},
   }),
   methods: {
     login() {
