@@ -4,14 +4,14 @@
       v-for="game in games"
       :key="game.id"
       class="mx-auto"
-      max-width=480
+      width="480"
     >
       <v-card-title>{{ game.name }}</v-card-title>
       <v-card-actions>
         <v-btn
-          :to="{ name: 'GameMatches' }"
+          :to="{ name: 'Matches', params: { game: game.id } }"
           class="ml-auto"
-          color="secondary"
+          color="primary"
         >
           Перейти
           <v-icon>mdi-arrow-right</v-icon>

@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 // import store from '../store';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
+import Matches from '../views/Matches.vue';
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,11 @@ const routes = [
     component() {
       return import('../views/Register.vue');
     },
+  },
+  {
+    path: '/games/:game/matches',
+    name: 'Matches',
+    component: Matches,
   },
   // {
   //   path: '/games',

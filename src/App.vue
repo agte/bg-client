@@ -9,7 +9,7 @@
 
 <template>
   <v-app>
-    <v-app-bar app dark>
+    <v-app-bar app dark color="secondary">
       <router-link
         to="/"
         class="logo-link d-flex align-center"
