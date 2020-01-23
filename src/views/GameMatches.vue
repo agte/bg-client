@@ -1,6 +1,6 @@
 <template>
-  <v-container class="mx-auto" style="width: 600px">
-    <h1 class="display-1 my-5 text-center">Настольные игры онлайн</h1>
+  <v-container class="home text-center" fluid>
+    <h1 class="display-1 my-5">Настольные игры онлайн</h1>
     <games></games>
   </v-container>
 </template>

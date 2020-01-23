@@ -1,12 +1,5 @@
-<style scoped>
-.login {
-  max-width: 480px;
-  margin: 0 auto;
-}
-</style>
-
 <template>
-  <v-container class="login" fluid>
+  <v-container class="mx-auto" style="width: 480px">
     <v-form @submit.prevent="login(email, password)">
       <v-alert v-if="error" type="error">{{ error.message }}</v-alert>
       <v-text-field

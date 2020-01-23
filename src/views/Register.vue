@@ -1,12 +1,5 @@
-<style scoped>
-.register {
-  max-width: 480px;
-  margin: 0 auto;
-}
-</style>
-
 <template>
-  <v-container class="register" fluid>
+  <v-container class="mx-auto" style="width: 480px">
     <v-form @submit.prevent="register(email, password, name)">
       <v-alert v-if="error" type="error">{{ error.message }}</v-alert>
       <v-text-field

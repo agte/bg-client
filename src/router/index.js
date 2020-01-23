@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import store from '../store';
-import Games from '../views/Games.vue';
+// import store from '../store';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 
@@ -26,18 +25,18 @@ const routes = [
       return import('../views/Register.vue');
     },
   },
-  {
-    path: '/games',
-    name: 'Games',
-    component: Games,
-    beforeEnter: (to, from, next) => {
-      if (!store.state.auth.user) {
-        next({ name: 'Login' });
-      } else {
-        next();
-      }
-    },
-  },
+  // {
+  //   path: '/games',
+  //   name: 'Games',
+  //   component: Games,
+  //   beforeEnter: (to, from, next) => {
+  //     if (!store.state.auth.user) {
+  //       next({ name: 'Login' });
+  //     } else {
+  //       next();
+  //     }
+  //   },
+  // },
 ];
 
 const router = new VueRouter({
