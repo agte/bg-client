@@ -7,7 +7,7 @@
 
 <template>
   <v-container class="register" fluid>
-    <v-form @submit.prevent="register">
+    <v-form @submit.prevent="register(email, password, name)">
       <v-alert v-if="error" type="error">{{ error.message }}</v-alert>
       <v-text-field
         v-model="name"
