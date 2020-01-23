@@ -12,7 +12,7 @@
     <v-app-bar app dark color="secondary">
       <router-link
         to="/"
-        class="logo-link d-flex align-center"
+        class="logo-link d-flex align-center mr-5"
       >
         <v-img
           alt="Vuetify Logo"
@@ -32,7 +32,17 @@
       <v-spacer></v-spacer>
 
       <v-btn
-        v-if="$route.name != 'Login' && !$store.state.auth.user"
+        v-if="user"
+        :to="{ name: 'MyMatches' }"
+        text
+      >
+        Мои партии
+      </v-btn>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        v-if="!user"
         :to="{ name: 'Login' }"
         text
       >
@@ -41,7 +51,7 @@
       </v-btn>
 
       <v-btn
-        v-if="$store.state.auth.user"
+        v-if="user"
         text
         @click="logout()"
       >
@@ -57,13 +67,15 @@
 </template>
 
 <script>
-import { onMounted } from '@vue/composition-api';
+import { computed, onMounted } from '@vue/composition-api';
 
 export default {
   setup(props, context) {
     const { $store } = context.root;
 
     const logout = () => $store.dispatch('auth/logout');
+
+    const user = computed(() => $store.state.auth.user);
 
     onMounted(() => {
       $store.dispatch('auth/authenticate')
@@ -76,6 +88,7 @@ export default {
 
     return {
       logout,
+      user,
     };
   },
 };

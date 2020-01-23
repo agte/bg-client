@@ -1,16 +1,12 @@
 <template>
   <div>
-    <v-card
-      v-for="match in matches"
-      :key="match.id"
-      class="mx-auto"
-      max-width="480"
-    >
-      <v-card-title>{{ match.id }}</v-card-title>
-      <v-card-actions>
-      </v-card-actions>
-    </v-card>
+    <v-alert
+      v-if="error"
+      type="error"
+    >{{ error.message }}</v-alert>
     <v-btn
+      @click="create()"
+      class="ml-auto"
       color="accent"
       fab
     >
@@ -21,7 +17,6 @@
 
 <script>
 import { ref } from '@vue/composition-api';
-import { useFind } from 'feathers-vuex';
 
 export default {
   props: {
@@ -30,32 +25,29 @@ export default {
       required: true,
     },
   },
+
   setup(props, context) {
     const { Match } = context.root.$FeathersVuex.api;
-
-    const { items: matches } = useFind({
-      model: Match,
-      params: {
-        query: {
-          game: props.game,
-          $sort: { createdAt: -1 },
-          $skip: 0,
-          $limit: 50,
-        },
-      },
-    });
-
     const error = ref(null);
 
     const create = async () => {
       try {
-        const match = new Match();
+        const match = new Match({ game: props.game });
         await match.save();
       } catch (e) {
         error.value = { message: e.message };
       }
     };
-    return { matches, create };
+
+    const dismissError = () => {
+      error.value = null;
+    };
+
+    return {
+      create,
+      error,
+      dismissError,
+    };
   },
 };
 </script>

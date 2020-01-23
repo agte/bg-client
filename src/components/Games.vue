@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card
-      v-for="game in games"
+      v-for="game in items"
       :key="game.id"
       class="mx-auto"
       width="480"
@@ -23,21 +23,22 @@
 
 <script>
 import { useFind } from 'feathers-vuex';
+import { ref } from '@vue/composition-api';
 
 export default {
   setup(props, context) {
     const { Game } = context.root.$FeathersVuex.api;
-    const { items: games } = useFind({
+    const { items } = useFind({
       model: Game,
-      params: {
+      params: ref({
         query: {
           $sort: { createdAt: -1 },
           $skip: 0,
           $limit: 50,
         },
-      },
+      }),
     });
-    return { games };
+    return { items };
   },
 };
 </script>
