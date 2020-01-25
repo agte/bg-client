@@ -80,7 +80,7 @@ export default {
     onMounted(() => {
       $store.dispatch('auth/authenticate')
         .catch((e) => {
-          if (!e.message.includes('Could not find stored JWT')) {
+          if (e.code !== 401) {
             console.error(e);
           }
         });
