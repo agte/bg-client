@@ -1,29 +1,40 @@
 <template>
-  <div>
-    <v-card
-      v-for="match in items"
-      :key="match.id"
-      class="mx-auto"
-      max-width="480"
-    >
-      <v-card-title>{{ match.id }} {{ match.status }}</v-card-title>
-      <v-card-actions>
-      </v-card-actions>
-    </v-card>
-  </div>
+  <v-simple-table>
+    <thead>
+      <tr>
+        <th>Игра</th>
+        <th>Дата создания</th>
+        <th>Игроки</th>
+        <th>Операции</th>
+      </tr>
+    </thead>
+    <tbody>
+      <gathering-match-row
+        v-for="match in items"
+        :key="match.id"
+        :match="match"
+      ></gathering-match-row>
+    </tbody>
+  </v-simple-table>
 </template>
 
 <script>
 import { useFind } from 'feathers-vuex';
 import { ref } from '@vue/composition-api';
+import GatheringMatchRow from './GatheringMatchRow.vue';
 
 export default {
+  components: {
+    GatheringMatchRow,
+  },
+
   props: {
     game: {
       type: String,
       required: true,
     },
   },
+
   setup(props, context) {
     const { Match } = context.root.$FeathersVuex.api;
 
