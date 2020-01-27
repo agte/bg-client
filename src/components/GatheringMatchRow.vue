@@ -46,7 +46,7 @@ export default {
 
     const isIn = computed(() => {
       const userId = $store.state.auth.user.id;
-      return match.players.some((player) => player.id === userId);
+      return match.players.some((player) => player.user === userId);
     });
 
     const join = async () => {
@@ -61,10 +61,12 @@ export default {
 
     const leave = async () => {
       const userId = $store.state.auth.user.id;
+      const player = match.players.find((p) => p.user === userId);
+      if (!player) return;
       try {
         await client
           .service(`match/${match.id}/players`)
-          .remove(userId);
+          .remove(player.id);
       } catch (e) {
         console.log(e);
       }
