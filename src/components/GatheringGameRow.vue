@@ -1,8 +1,8 @@
 <template>
   <tr>
-    <td>{{ match.name }}</td>
+    <td>{{ game.name }}</td>
     <td>{{ createdAt }}</td>
-    <td>{{ match.players.length }}</td>
+    <td>{{ game.players.length }}</td>
     <td>
       <v-btn
         v-if="!isIn"
@@ -32,27 +32,27 @@ import client from '../feathers';
 
 export default {
   props: {
-    match: {
+    game: {
       type: Object,
       required: true,
     },
   },
 
   setup(props, context) {
-    const { match } = props;
+    const { game } = props;
     const { $store } = context.root;
 
-    const createdAt = computed(() => (new Date(match.createdAt)).toLocaleTimeString());
+    const createdAt = computed(() => (new Date(game.createdAt)).toLocaleTimeString());
 
     const isIn = computed(() => {
       const userId = $store.state.auth.user.id;
-      return match.players.some((player) => player.user === userId);
+      return game.players.some((player) => player.user === userId);
     });
 
     const join = async () => {
       try {
         await client
-          .service(`match/${match.id}/players`)
+          .service(`game/${game.id}/players`)
           .create({});
       } catch (e) {
         console.log(e);
@@ -61,11 +61,11 @@ export default {
 
     const leave = async () => {
       const userId = $store.state.auth.user.id;
-      const player = match.players.find((p) => p.user === userId);
+      const player = game.players.find((p) => p.user === userId);
       if (!player) return;
       try {
         await client
-          .service(`match/${match.id}/players`)
+          .service(`game/${game.id}/players`)
           .remove(player.id);
       } catch (e) {
         console.log(e);

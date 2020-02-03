@@ -3,17 +3,18 @@
     <thead>
       <tr>
         <th>Игра</th>
+        <th>Статус</th>
         <th>Дата создания</th>
         <th>Игроки</th>
         <th>Операции</th>
       </tr>
     </thead>
     <tbody>
-      <gathering-match-row
-        v-for="match in items"
-        :key="match.id"
-        :match="match"
-      ></gathering-match-row>
+      <user-game-row
+        v-for="game in items"
+        :key="game.id"
+        :game="game"
+      ></user-game-row>
     </tbody>
   </v-simple-table>
 </template>
@@ -21,28 +22,27 @@
 <script>
 import { useFind } from 'feathers-vuex';
 import { ref } from '@vue/composition-api';
-import GatheringMatchRow from './GatheringMatchRow.vue';
+import UserGameRow from './UserGameRow.vue';
 
 export default {
   components: {
-    GatheringMatchRow,
+    UserGameRow,
   },
 
   props: {
-    game: {
+    owner: {
       type: String,
       required: true,
     },
   },
 
   setup(props, context) {
-    const { Match } = context.root.$FeathersVuex.api;
+    const { Game } = context.root.$FeathersVuex.api;
 
     const params = ref({
-      qid: 'gatheringMatches',
+      qid: 'myGames',
       query: {
-        game: props.game,
-        status: 'gathering',
+        owner: props.owner,
         $sort: { createdAt: -1 },
         $skip: 0,
         $limit: 50,
@@ -50,11 +50,14 @@ export default {
     });
 
     const { items } = useFind({
-      model: Match,
+      model: Game,
       params,
     });
 
-    return { items, params };
+    return {
+      items,
+      params,
+    };
   },
 };
 </script>

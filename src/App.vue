@@ -33,7 +33,7 @@
 
       <v-btn
         v-if="user"
-        :to="{ name: 'MyMatches' }"
+        :to="{ name: 'MyGames' }"
         text
       >
         Мои партии

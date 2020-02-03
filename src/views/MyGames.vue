@@ -1,16 +1,16 @@
 <template>
   <v-container fluid>
     <h1 class="display-1 my-5 text-center">Мои партии</h1>
-    <user-matches :owner="user.id"></user-matches>
+    <user-games :owner="user.id"></user-games>
   </v-container>
 </template>
 
 <script>
-import UserMatches from '../components/UserMatches.vue';
+import UserGames from '../components/UserGames.vue';
 
 export default {
   components: {
-    UserMatches,
+    UserGames,
   },
 
   setup(props, context) {

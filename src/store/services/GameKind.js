@@ -1,12 +1,12 @@
 import client, { makeServicePlugin, BaseModel } from '../../feathers';
 
-class Match extends BaseModel {
+class GameKind extends BaseModel {
   // constructor(data, options) {
   //   super(data, options);
   // }
 
   // Required for $FeathersVuex plugin to work after production transpile.
-  static modelName = 'Match';
+  static modelName = 'GameKind';
 
   // Define default properties here
   static instanceDefaults() {
@@ -14,9 +14,9 @@ class Match extends BaseModel {
   }
 }
 
-const servicePath = 'match';
+const servicePath = 'gameKind';
 const servicePlugin = makeServicePlugin({
-  Model: Match,
+  Model: GameKind,
   service: client.service(servicePath),
   servicePath,
 });

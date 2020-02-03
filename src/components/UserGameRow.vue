@@ -1,12 +1,12 @@
 <template>
   <tr>
-    <td>{{ match.name }}</td>
+    <td>{{ game.name }}</td>
     <td>{{ status }}</td>
     <td>{{ createdAt }}</td>
-    <td>{{ match.players.length }}</td>
+    <td>{{ game.players.length }}</td>
     <td>
       <v-btn
-        v-if="match.status === 'draft'"
+        v-if="game.status === 'draft'"
         @click="startGathering()"
         color="primary"
         icon
@@ -15,7 +15,7 @@
         <v-icon>mdi-play</v-icon>
       </v-btn>
       <v-btn
-        v-if="match.status === 'gathering'"
+        v-if="game.status === 'gathering'"
         @click="stopGathering()"
         color="secondary"
         icon
@@ -42,7 +42,7 @@
         <v-icon>mdi-minus</v-icon>
       </v-btn>
       <v-btn
-        v-if="match.status === 'draft'"
+        v-if="game.status === 'draft'"
         @click="remove()"
         color="accent"
         icon
@@ -69,26 +69,26 @@ const statuses = {
 
 export default {
   props: {
-    match: {
+    game: {
       type: Object,
       required: true,
     },
   },
 
   setup(props, context) {
-    const { match } = props;
+    const { game } = props;
     const { $store } = context.root;
 
     const createdAt = computed(() => {
-      const date = new Date(match.createdAt);
+      const date = new Date(game.createdAt);
       return `${date.toLocaleTimeString()} ${date.toLocaleDateString()}`;
     });
 
-    const status = computed(() => statuses[match.status]);
+    const status = computed(() => statuses[game.status]);
 
     const remove = async () => {
       try {
-        await match.remove();
+        await game.remove();
       } catch (e) {
         console.log(e);
       }
@@ -97,7 +97,7 @@ export default {
     const startGathering = async () => {
       try {
         await client
-          .service(`match/${match.id}/status`)
+          .service(`game/${game.id}/status`)
           .update(null, { value: 'gathering' });
       } catch (e) {
         console.log(e);
@@ -107,7 +107,7 @@ export default {
     const stopGathering = async () => {
       try {
         await client
-          .service(`match/${match.id}/status`)
+          .service(`game/${game.id}/status`)
           .update(null, { value: 'draft' });
       } catch (e) {
         console.log(e);
@@ -116,13 +116,13 @@ export default {
 
     const isIn = computed(() => {
       const userId = $store.state.auth.user.id;
-      return match.players.some((player) => player.user === userId);
+      return game.players.some((player) => player.user === userId);
     });
 
     const join = async () => {
       try {
         await client
-          .service(`match/${match.id}/players`)
+          .service(`game/${game.id}/players`)
           .create({});
       } catch (e) {
         console.log(e);
@@ -131,11 +131,11 @@ export default {
 
     const leave = async () => {
       const userId = $store.state.auth.user.id;
-      const player = match.players.find((p) => p.user === userId);
+      const player = game.players.find((p) => p.user === userId);
       if (!player) return;
       try {
         await client
-          .service(`match/${match.id}/players`)
+          .service(`game/${game.id}/players`)
           .remove(player.id);
       } catch (e) {
         console.log(e);

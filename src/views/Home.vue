@@ -1,14 +1,14 @@
 <template>
   <v-container class="mx-auto" style="width: 600px">
     <h1 class="display-1 my-5 text-center">Настольные игры онлайн</h1>
-    <games></games>
+    <game-kinds></game-kinds>
   </v-container>
 </template>
 
 <script>
-import Games from '../components/Games.vue';
+import GameKinds from '../components/GameKinds.vue';
 
 export default {
-  components: { Games },
+  components: { GameKinds },
 };
 </script>

@@ -1,15 +1,15 @@
 <template>
   <div>
     <v-card
-      v-for="game in items"
-      :key="game.id"
+      v-for="gameKind in items"
+      :key="gameKind.id"
       class="mx-auto"
       width="480"
     >
-      <v-card-title>{{ game.name }}</v-card-title>
+      <v-card-title>{{ gameKind.name }}</v-card-title>
       <v-card-actions>
         <v-btn
-          :to="{ name: 'Matches', params: { game: game.id } }"
+          :to="{ name: 'Games', params: { gameKind: gameKind.id } }"
           class="ml-auto"
           color="primary"
         >
@@ -27,9 +27,9 @@ import { ref } from '@vue/composition-api';
 
 export default {
   setup(props, context) {
-    const { Game } = context.root.$FeathersVuex.api;
+    const { GameKind } = context.root.$FeathersVuex.api;
     const { items } = useFind({
-      model: Game,
+      model: GameKind,
       params: ref({
         query: {
           $sort: { createdAt: -1 },

@@ -20,7 +20,7 @@ import { ref } from '@vue/composition-api';
 
 export default {
   props: {
-    game: {
+    kind: {
       type: String,
       required: true,
     },
@@ -28,14 +28,14 @@ export default {
 
   setup(props, context) {
     const { $router } = context.root;
-    const { Match } = context.root.$FeathersVuex.api;
+    const { Game } = context.root.$FeathersVuex.api;
     const error = ref(null);
 
     const create = async () => {
       try {
-        const match = new Match({ game: props.game });
-        await match.save();
-        $router.push({ name: 'MyMatches' });
+        const game = new Game({ kind: props.kind });
+        await game.save();
+        $router.push({ name: 'MyGames' });
       } catch (e) {
         error.value = { message: e.message };
       }
