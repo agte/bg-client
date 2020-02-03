@@ -10,7 +10,9 @@ class Game extends BaseModel {
 
   // Define default properties here
   static instanceDefaults() {
-    return {};
+    return {
+      kind: '',
+    };
   }
 }
 
@@ -19,6 +21,7 @@ const servicePlugin = makeServicePlugin({
   Model: Game,
   service: client.service(servicePath),
   servicePath,
+  idField: 'id',
 });
 
 // Setup the client-side Feathers hooks.

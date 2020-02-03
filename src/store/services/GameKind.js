@@ -19,6 +19,7 @@ const servicePlugin = makeServicePlugin({
   Model: GameKind,
   service: client.service(servicePath),
   servicePath,
+  idField: 'id',
 });
 
 // Setup the client-side Feathers hooks.

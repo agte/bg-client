@@ -27,14 +27,18 @@ export default {
   },
 
   setup(props, context) {
-    const { $router } = context.root;
-    const { Game } = context.root.$FeathersVuex.api;
+    const { $router, $store } = context.root;
     const error = ref(null);
 
     const create = async () => {
       try {
-        const game = new Game({ kind: props.kind });
-        await game.save();
+        // Используем это вместо (new Game()).save(),
+        // потому что при первом подходе модели не добавляются геттеры/сеттеры на свойства,
+        // которые не были переданы в конструктор и не были заданы в настройке instanceDefaults.
+        // Но задавать эти свойства заранее нельзя -
+        // они отправятся на сервер, а он их не примет и будет ругаться.
+        // Эти свойства проставляются только сервером!
+        await $store.dispatch('game/create', { kind: props.kind });
         $router.push({ name: 'MyGames' });
       } catch (e) {
         error.value = { message: e.message };
