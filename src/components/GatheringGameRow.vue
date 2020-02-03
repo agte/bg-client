@@ -22,6 +22,16 @@
       >
         <v-icon>mdi-minus</v-icon>
       </v-btn>
+
+      <v-btn
+        v-if="isOwner"
+        @click="launch()"
+        color="primary"
+        icon
+        title="Запустить"
+      >
+        <v-icon>mdi-play</v-icon>
+      </v-btn>
     </td>
   </tr>
 </template>
@@ -49,6 +59,11 @@ export default {
       return game.players.some((player) => player.user === userId);
     });
 
+    const isOwner = computed(() => {
+      const userId = $store.state.auth.user.id;
+      return userId === game.owner;
+    });
+
     const join = async () => {
       try {
         await client
@@ -72,11 +87,23 @@ export default {
       }
     };
 
+    const launch = async () => {
+      try {
+        await client
+          .service(`game/${game.id}/status`)
+          .update(null, { value: 'launched' });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
     return {
       createdAt,
       isIn,
+      isOwner,
       join,
       leave,
+      launch,
     };
   },
 };

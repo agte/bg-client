@@ -32,17 +32,23 @@
       <v-spacer></v-spacer>
 
       <v-btn
-        v-if="user"
+        v-if="authenticated"
         :to="{ name: 'MyGames' }"
         text
       >
-        Мои партии
+        Мои игры
       </v-btn>
+
+      <v-btn
+        v-if="authenticated"
+        :to="{ name: 'LaunchedGames' }"
+        text
+      >Идут сейчас</v-btn>
 
       <v-spacer></v-spacer>
 
       <v-btn
-        v-if="!user"
+        v-if="!authenticated"
         :to="{ name: 'Login' }"
         text
       >
@@ -51,7 +57,7 @@
       </v-btn>
 
       <v-btn
-        v-if="user"
+        v-if="authenticated"
         text
         @click="logout()"
       >
@@ -77,7 +83,7 @@ export default {
 
     const logout = () => $store.dispatch('auth/logout');
 
-    const user = computed(() => $store.state.auth.user);
+    const authenticated = computed(() => !!$store.state.auth.user);
 
     onMounted(async () => {
       try {
@@ -94,7 +100,7 @@ export default {
     return {
       ready,
       logout,
-      user,
+      authenticated,
     };
   },
 };
