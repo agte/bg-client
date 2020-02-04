@@ -119,28 +119,8 @@ export default {
       return game.players.some((player) => player.user === userId);
     });
 
-    const join = async () => {
-      try {
-        await client
-          .service(`game/${game.id}/players`)
-          .create({});
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    const leave = async () => {
-      const userId = $store.state.auth.user.id;
-      const player = game.players.find((p) => p.user === userId);
-      if (!player) return;
-      try {
-        await client
-          .service(`game/${game.id}/players`)
-          .remove(player.id);
-      } catch (e) {
-        console.log(e);
-      }
-    };
+    const join = async () => $store.dispatch('game/join', { game });
+    const leave = async () => $store.dispatch('game/leave', { game });
 
     return {
       createdAt,

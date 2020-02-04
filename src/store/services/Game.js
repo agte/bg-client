@@ -22,6 +22,29 @@ const servicePlugin = makeServicePlugin({
   service: client.service(servicePath),
   servicePath,
   idField: 'id',
+  actions: {
+    async join({ rootGetters, rootState }, { game }) {
+      console.log(rootState);
+      if (!rootGetters.userId) {
+        throw new Error('NotAuthenticated');
+      }
+      return client.service(`game/${game.id}/players`).create({});
+    },
+
+    async leave({ rootGetters }, { game }) {
+      const { userId } = rootGetters;
+      if (!userId) {
+        throw new Error('NotAuthenticated');
+      }
+
+      const player = game.players.find((p) => p.user === userId);
+      if (!player) {
+        throw new Error('Forbidden');
+      }
+
+      return client.service(`game/${game.id}/players`).remove(player.id);
+    },
+  },
 });
 
 // Setup the client-side Feathers hooks.
