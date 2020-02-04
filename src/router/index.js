@@ -4,7 +4,7 @@ import VueRouter from 'vue-router';
 // import store from '../store';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
-import Games from '../views/Games.vue';
+import WaitingGames from '../views/WaitingGames.vue';
 
 Vue.use(VueRouter);
 
@@ -26,18 +26,18 @@ const routes = [
   },
   {
     path: '/gameKinds/:gameKind/games',
-    name: 'Games',
-    component: Games,
-  },
-  {
-    path: '/my-games',
-    name: 'MyGames',
-    component: () => import('../views/MyGames.vue'),
+    name: 'WaitingGames',
+    component: WaitingGames,
   },
   {
     path: '/launched-games',
     name: 'LaunchedGames',
     component: () => import('../views/LaunchedGames.vue'),
+  },
+  {
+    path: '/my-games',
+    name: 'MyGames',
+    component: () => import('../views/MyGames.vue'),
   },
 ];
 

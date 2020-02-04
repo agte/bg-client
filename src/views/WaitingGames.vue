@@ -1,8 +1,8 @@
 <template>
   <v-container class="mx-auto" style="width: 600px">
     <h1 class="display-1 my-5 text-center">Партии</h1>
-    <gathering-games :kind="gameKind.id"></gathering-games>
-    <new-game-button v-if="authenticated" :kind="gameKind.id"></new-game-button>
+    <gathering-games :kind="gameKind"></gathering-games>
+    <new-game-button v-if="authenticated" :kind="gameKind"></new-game-button>
   </v-container>
 </template>
 
@@ -18,7 +18,7 @@ export default {
 
   setup(props, context) {
     return {
-      gameKind: { id: context.root.$route.params.gameKind },
+      gameKind: context.root.$route.params.gameKind,
       authenticated: !!context.root.$store.state.auth.user,
     };
   },
