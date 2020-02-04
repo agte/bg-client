@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+
 import { FeathersVuex } from '../feathers';
+import gamePlayers from './modules/gamePlayers';
 
 Vue.use(Vuex);
 Vue.use(FeathersVuex);
@@ -17,9 +19,23 @@ const services = requireModule
 export default new Vuex.Store({
   state: {
   },
+  getters: {
+    userId: (state) => (state.auth && state.auth.user && state.auth.user.id ? state.auth.user.id : ''),
+  },
   mutations: {
   },
   actions: {
+  },
+  modules: {
+    gamePlayers,
+    gameStatus: {
+      state: {},
+      actions: {},
+    },
+    gameState: {
+      state: {},
+      actions: {},
+    },
   },
   plugins: services,
 });
