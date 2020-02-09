@@ -3,4 +3,9 @@ module.exports = {
     'feathers-vuex',
     'vuetify',
   ],
+  devServer: {
+    watchOptions: {
+      poll: true,
+    },
+  },
 };
