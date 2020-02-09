@@ -10,10 +10,7 @@
 <template>
   <v-app>
     <v-app-bar app dark color="secondary">
-      <router-link
-        to="/"
-        class="logo-link d-flex align-center mr-5"
-      >
+      <router-link to="/" class="logo-link d-flex align-center mr-5">
         <v-img
           alt="Vuetify Logo"
           class="shrink mr-2"
@@ -22,45 +19,25 @@
           transition="scale-transition"
           width="40"
         />
-        <v-toolbar-title
-          class="font-weight-regular title white--text toolbar-title"
-        >
+        <v-toolbar-title class="font-weight-regular title white--text toolbar-title">
           Мухожук
         </v-toolbar-title>
       </router-link>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        v-if="authenticated"
-        :to="{ name: 'MyGames' }"
-        text
-      >
-        Мои игры
-      </v-btn>
-
-      <v-btn
-        v-if="authenticated"
-        :to="{ name: 'LaunchedGames' }"
-        text
-      >Идут сейчас</v-btn>
+      <v-btn v-if="authenticated" :to="{ name: 'Home' }" exact text>Начать играть</v-btn>
+      <v-btn v-if="authenticated" :to="{ name: 'MyGames' }" text>Мои игры</v-btn>
+      <v-btn v-if="authenticated" :to="{ name: 'LaunchedGames' }" text>Идут сейчас</v-btn>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        v-if="!authenticated"
-        :to="{ name: 'Login' }"
-        text
-      >
+      <v-btn v-if="!authenticated" :to="{ name: 'Login' }" text>
         <span class="mr-1">Войти</span>
         <v-icon>mdi-login</v-icon>
       </v-btn>
 
-      <v-btn
-        v-if="authenticated"
-        text
-        @click="logout()"
-      >
+      <v-btn v-if="authenticated" @click="logout()" text>
         <span class="mr-1">Выйти</span>
         <v-icon>mdi-logout</v-icon>
       </v-btn>

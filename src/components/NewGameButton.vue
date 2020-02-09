@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn @click="create()" fixed right bottom color="accent" fab>
+    <v-btn @click="create()" title="Начать новую партию" color="accent" fixed right bottom fab>
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-alert v-if="error" type="error">{{ error.message }}</v-alert>

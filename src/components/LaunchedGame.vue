@@ -1,11 +1,11 @@
 <template>
   <tr>
-    <td>{{ game.name }}</td>
+    <td>{{ gameKind.name }}</td>
     <td>{{ createdAt }}</td>
     <td>{{ players }}</td>
     <td>
       <v-btn
-        v-if="isIn"
+        v-if="canPlay"
         @click="play()"
         color="primary"
         icon
@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import { computed } from '@vue/composition-api';
-// import client from '../feathers';
+import { ref, isRef } from '@vue/composition-api';
+import useGame from '../mixins/useGame';
 
 export default {
   props: {
@@ -30,30 +30,16 @@ export default {
   },
 
   setup(props, context) {
-    const { game } = props;
     const { $store } = context.root;
-
-    const createdAt = computed(() => {
-      const date = new Date(game.createdAt);
-      return `${date.toLocaleTimeString()} ${date.toLocaleDateString()}`;
-    });
-
-    const players = computed(() => game.players.map((player) => player.name).join(', '));
-
-    const isIn = computed(() => {
-      const userId = $store.state.auth.user.id;
-      return game.players.some((player) => player.user === userId);
-    });
-
-    const play = () => {
-      console.log('Should open a game window');
-    };
+    const gameKind = ref({ name: 'Unknown' });
+    $store.dispatch('gameKind/getFast', props.game.kind)
+      .then((resource) => {
+        gameKind.value = isRef(resource) ? resource.value : resource;
+      });
 
     return {
-      createdAt,
-      players,
-      isIn,
-      play,
+      ...useGame(props.game, context.root.$store),
+      gameKind,
     };
   },
 };

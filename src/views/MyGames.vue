@@ -39,14 +39,9 @@ export default {
         $sort: { createdAt: -1 },
       },
     });
-    const { items } = useFind({
-      model: Game,
-      params,
-    });
+    const { items: games } = useFind({ model: Game, params });
 
-    return {
-      games: items,
-    };
+    return { games };
   },
 };
 </script>

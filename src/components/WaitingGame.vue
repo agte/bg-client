@@ -11,7 +11,7 @@
         <v-icon>mdi-minus</v-icon>
       </v-btn>
 
-      <v-btn v-if="isOwner" @click="launch()" title="Запустить" color="primary" icon>
+      <v-btn v-if="canLaunch" @click="launch()" title="Запустить" color="primary" icon>
         <v-icon>mdi-play</v-icon>
       </v-btn>
     </td>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { computed } from '@vue/composition-api';
+import useGame from '../mixins/useGame';
 
 export default {
   props: {
@@ -29,25 +29,8 @@ export default {
     },
   },
 
-  setup({ game }, context) {
-    const { $store } = context.root;
-    const { userId } = $store.getters;
-    return {
-      createdAt: computed(() => (new Date(game.createdAt)).toLocaleTimeString()),
-      canJoin: computed(() => game.players.length < game.maxPlayers),
-      canLeave: computed(() => game.players.some((player) => player.user === userId)),
-      isOwner: computed(() => game.owner === userId),
-      players: computed(() => game.players.map((player) => player.name).join(', ')),
-      join: async () => $store.dispatch('game/join', game.id),
-      launch: async () => $store.dispatch('game/launch', game.id),
-      leave: async () => {
-        await $store.dispatch('game/leave', game.id);
-        if (game.players.length === 0) {
-          await $store.dispatch('game/stopGathering', game.id);
-          await $store.dispatch('game/remove', game.id);
-        }
-      },
-    };
+  setup(props, context) {
+    return useGame(props.game, context.root.$store);
   },
 };
 </script>

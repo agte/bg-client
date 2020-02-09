@@ -49,15 +49,12 @@ export default {
         gameKind.value = isRef(resource) ? resource.value : resource;
       });
 
-    const { items } = useFind({
+    const { items: games } = useFind({
       model: context.root.$FeathersVuex.api.Game,
       params: searchQuery,
     });
 
-    return {
-      games: items,
-      gameKind,
-    };
+    return { games, gameKind };
   },
 };
 </script>

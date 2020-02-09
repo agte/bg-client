@@ -1,71 +1,38 @@
 <template>
   <tr>
-    <td>{{ game.name }}</td>
+    <td>{{ gameKind.name }}</td>
     <td>{{ status }}</td>
     <td>{{ createdAt }}</td>
-    <td>{{ game.players.length }}</td>
+    <td>{{ players }}</td>
     <td>
-      <v-btn
-        v-if="game.status === 'draft'"
-        @click="startGathering()"
-        color="primary"
-        icon
-        title="Найти игроков"
-      >
-        <v-icon>mdi-play</v-icon>
-      </v-btn>
-      <v-btn
-        v-if="game.status === 'gathering'"
-        @click="stopGathering()"
-        color="secondary"
-        icon
-        title="Отменить поиск игроков"
-      >
-        <v-icon>mdi-stop</v-icon>
-      </v-btn>
-      <v-btn
-        v-if="!isIn"
-        @click="join()"
-        color="primary"
-        icon
-        title="Присоединиться"
-      >
+      <v-btn v-if="canJoin" @click="join()" title="Присоединиться" color="primary" icon>
         <v-icon>mdi-plus</v-icon>
       </v-btn>
-      <v-btn
-        v-if="isIn"
-        @click="leave()"
-        color="primary"
-        icon
-        title="Покинуть"
-      >
+
+      <v-btn v-if="canLeave" @click="leave()" title="Покинуть" color="primary" icon>
         <v-icon>mdi-minus</v-icon>
       </v-btn>
+
+      <v-btn v-if="canLaunch" @click="launch()" title="Запустить" color="primary" icon>
+        <v-icon>mdi-play</v-icon>
+      </v-btn>
+
       <v-btn
-        v-if="game.status === 'draft'"
-        @click="remove()"
-        color="accent"
+        v-if="canPlay"
+        @click="play()"
+        color="primary"
         icon
-        title="Удалить"
+        title="Открыть"
       >
-        <v-icon>mdi-delete</v-icon>
+        <v-icon>mdi-login</v-icon>
       </v-btn>
     </td>
   </tr>
 </template>
 
 <script>
-import { computed } from '@vue/composition-api';
-import client from '../feathers';
-
-const statuses = {
-  draft: 'Черновик',
-  gathering: 'Поиск игроков',
-  pending: 'Подготовка к запуску',
-  launched: 'Запущена',
-  finished: 'Завершена',
-  aborted: 'Прервана',
-};
+import { ref, isRef } from '@vue/composition-api';
+import useGame from '../mixins/useGame';
 
 export default {
   props: {
@@ -73,64 +40,23 @@ export default {
       type: Object,
       required: true,
     },
+    kind: {
+      type: String,
+      required: false,
+    },
   },
 
   setup(props, context) {
-    const { game } = props;
     const { $store } = context.root;
-
-    const createdAt = computed(() => {
-      const date = new Date(game.createdAt);
-      return `${date.toLocaleTimeString()} ${date.toLocaleDateString()}`;
-    });
-
-    const status = computed(() => statuses[game.status]);
-
-    const remove = async () => {
-      try {
-        await game.remove();
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    const startGathering = async () => {
-      try {
-        await client
-          .service(`game/${game.id}/status`)
-          .update(null, { value: 'gathering' });
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    const stopGathering = async () => {
-      try {
-        await client
-          .service(`game/${game.id}/status`)
-          .update(null, { value: 'draft' });
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    const isIn = computed(() => {
-      const userId = $store.state.auth.user.id;
-      return game.players.some((player) => player.user === userId);
-    });
-
-    const join = async () => $store.dispatch('game/join', game.id);
-    const leave = async () => $store.dispatch('game/leave', game.id);
+    const gameKind = ref({ name: 'Unknown' });
+    $store.dispatch('gameKind/getFast', props.game.kind)
+      .then((resource) => {
+        gameKind.value = isRef(resource) ? resource.value : resource;
+      });
 
     return {
-      createdAt,
-      status,
-      remove,
-      startGathering,
-      stopGathering,
-      isIn,
-      join,
-      leave,
+      ...useGame(props.game, context.root.$store),
+      gameKind,
     };
   },
 };
