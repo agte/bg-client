@@ -43,7 +43,6 @@ export default {
   /* eslint-disable no-shadow */
   setup(props, context) {
     const { $store, $router } = context.root;
-    const { User } = context.root.$FeathersVuex.api;
 
     const email = ref('');
     const password = ref('');
@@ -53,9 +52,8 @@ export default {
 
     const register = async (email, password, name) => {
       try {
-        const user = new User({ email, password, name: name || email });
-        await user.save();
-        $store.dispatch('auth/authenticate', { strategy: 'local', email, password });
+        await $store.dispatch('user/register', { email, password, name: name || email });
+        await $store.dispatch('auth/authenticate', { strategy: 'local', email, password });
         $router.push({ name: 'Home' });
       } catch (e) {
         error.value = { message: e.message };

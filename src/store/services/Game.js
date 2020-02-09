@@ -22,13 +22,22 @@ const servicePlugin = makeServicePlugin({
   service: client.service(servicePath),
   servicePath,
   idField: 'id',
+  getters: {
+  },
   actions: {
-    async join({ rootGetters, rootState }, { game }) {
-      console.log(rootState);
+    async join({ rootGetters }, { game }) {
       if (!rootGetters.userId) {
         throw new Error('NotAuthenticated');
       }
-      return client.service(`game/${game.id}/players`).create({});
+      return client
+        .service(`game/${game.id}/players`)
+        .create({});
+    },
+
+    async launch(context, { game }) {
+      return client
+        .service(`game/${game.id}/status`)
+        .update(null, { value: 'launched' });
     },
 
     async leave({ rootGetters }, { game }) {
@@ -42,7 +51,21 @@ const servicePlugin = makeServicePlugin({
         throw new Error('Forbidden');
       }
 
-      return client.service(`game/${game.id}/players`).remove(player.id);
+      return client
+        .service(`game/${game.id}/players`)
+        .remove(player.id);
+    },
+
+    async startGathering(context, { game }) {
+      return client
+        .service(`game/${game.id}/status`)
+        .update(null, { value: 'gathering' });
+    },
+
+    async stopGathering(context, { game }) {
+      return client
+        .service(`game/${game.id}/status`)
+        .update(null, { value: 'draft' });
     },
   },
 });

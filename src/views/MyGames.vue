@@ -1,22 +1,51 @@
 <template>
   <v-container fluid>
     <h1 class="display-1 my-5 text-center">Мои партии</h1>
-    <user-games :owner="user.id"></user-games>
+    <v-simple-table>
+      <thead>
+        <tr>
+          <th>Игра</th>
+          <th>Статус</th>
+          <th>Дата создания</th>
+          <th>Игроки</th>
+          <th>Операции</th>
+        </tr>
+      </thead>
+      <tbody>
+        <user-game v-for="game in games" :key="game.id" :game="game"></user-game>
+      </tbody>
+    </v-simple-table>
   </v-container>
 </template>
 
 <script>
-import UserGames from '../components/UserGames.vue';
+import { useFind } from 'feathers-vuex';
+import { ref } from '@vue/composition-api';
+import UserGame from '../components/UserGame.vue';
 
 export default {
   components: {
-    UserGames,
+    UserGame,
   },
 
   setup(props, context) {
-    const { user } = context.root.$store.state.auth;
+    const { Game } = context.root.$FeathersVuex.api;
+    const params = ref({
+      qid: 'myGames',
+      query: {
+        owner: context.root.$store.getters.userId,
+        $limit: 50,
+        $skip: 0,
+        $sort: { createdAt: -1 },
+      },
+    });
+    const { items } = useFind({
+      model: Game,
+      params,
+    });
+
     return {
-      user,
+      games: items,
     };
   },
 };

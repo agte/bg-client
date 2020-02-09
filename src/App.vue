@@ -81,7 +81,10 @@ export default {
 
     const ready = ref(false);
 
-    const logout = () => $store.dispatch('auth/logout');
+    const logout = async () => {
+      await $store.dispatch('auth/logout');
+      window.location.reload();
+    };
 
     const authenticated = computed(() => !!$store.state.auth.user);
 

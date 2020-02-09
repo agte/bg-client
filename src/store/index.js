@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { FeathersVuex } from '../feathers';
+import client, { FeathersVuex } from '../feathers';
 
 Vue.use(Vuex);
 Vue.use(FeathersVuex);
@@ -19,13 +19,20 @@ export default new Vuex.Store({
   state: {
   },
   getters: {
-    userId: (state) => (state.auth && state.auth.user && state.auth.user.id ? state.auth.user.id : ''),
+    userId: (state) => (state.auth.user ? state.auth.user.id : ''),
+    authenticated: (state) => !!state.auth.user,
   },
   mutations: {
   },
   actions: {
   },
   modules: {
+    user: {
+      namespaced: true,
+      actions: {
+        register: (context, data) => client.service('user').create(data),
+      },
+    },
   },
   plugins: services,
 });

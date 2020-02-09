@@ -31,8 +31,13 @@ export default {
     const error = ref(null);
 
     const create = async () => {
-      $store.dispatch('game/create', { kind: props.kind })
-        .catch((e) => { error.value = { message: e.message }; });
+      try {
+        const game = await $store.dispatch('game/create', { kind: props.kind });
+        await $store.dispatch('game/join', { game });
+        await $store.dispatch('game/startGathering', { game });
+      } catch (e) {
+        error.value = { message: e.message };
+      }
     };
 
     const dismissError = () => {
