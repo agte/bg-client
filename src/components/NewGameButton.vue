@@ -1,6 +1,6 @@
 <template>
-  <div style="position: relative">
-    <v-btn @click="create()" absolute top right color="accent" fab>
+  <div>
+    <v-btn @click="create()" fixed right bottom color="accent" fab>
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-alert v-if="error" type="error">{{ error.message }}</v-alert>
@@ -25,9 +25,10 @@ export default {
     const create = async () => {
       try {
         const game = await $store.dispatch('game/create', { kind: props.kind });
-        await $store.dispatch('game/join', { game });
-        await $store.dispatch('game/startGathering', { game });
+        await $store.dispatch('game/join', game.id);
+        await $store.dispatch('game/startGathering', game.id);
       } catch (e) {
+        console.log(e);
         error.value = { message: e.message };
       }
     };

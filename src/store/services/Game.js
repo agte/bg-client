@@ -1,4 +1,6 @@
-import client, { makeServicePlugin, BaseModel } from '../../feathers';
+import client, { makeServicePlugin, BaseModel, errors } from '../../feathers';
+
+const { NotFound, Forbidden } = errors;
 
 class Game extends BaseModel {
   // constructor(data, options) {
@@ -25,46 +27,55 @@ const servicePlugin = makeServicePlugin({
   getters: {
   },
   actions: {
-    async join({ rootGetters }, { game }) {
+    async join({ rootGetters }, id) {
       if (!rootGetters.userId) {
         throw new Error('NotAuthenticated');
       }
       return client
-        .service(`game/${game.id}/players`)
+        .service(`game/${id}/players`)
         .create({});
     },
 
-    async launch(context, { game }) {
+    async launch(context, id) {
       return client
-        .service(`game/${game.id}/status`)
+        .service(`game/${id}/status`)
         .update(null, { value: 'launched' });
     },
 
-    async leave({ rootGetters }, { game }) {
+    async leave({ getters, rootGetters, dispatch }, id) {
       const { userId } = rootGetters;
       if (!userId) {
         throw new Error('NotAuthenticated');
       }
 
-      const player = game.players.find((p) => p.user === userId);
+      let game = getters.get(id);
+      if (!game) {
+        game = await dispatch('get', id);
+      }
+
+      if (!game) {
+        throw new NotFound();
+      }
+
+      const player = game.players.reverse().find((p) => p.user === userId);
       if (!player) {
-        throw new Error('Forbidden');
+        throw new Forbidden();
       }
 
       return client
-        .service(`game/${game.id}/players`)
+        .service(`game/${id}/players`)
         .remove(player.id);
     },
 
-    async startGathering(context, { game }) {
+    async startGathering(context, id) {
       return client
-        .service(`game/${game.id}/status`)
+        .service(`game/${id}/status`)
         .update(null, { value: 'gathering' });
     },
 
-    async stopGathering(context, { game }) {
+    async stopGathering(context, id) {
       return client
-        .service(`game/${game.id}/status`)
+        .service(`game/${id}/status`)
         .update(null, { value: 'draft' });
     },
   },

@@ -119,8 +119,8 @@ export default {
       return game.players.some((player) => player.user === userId);
     });
 
-    const join = async () => $store.dispatch('game/join', { game });
-    const leave = async () => $store.dispatch('game/leave', { game });
+    const join = async () => $store.dispatch('game/join', game.id);
+    const leave = async () => $store.dispatch('game/leave', game.id);
 
     return {
       createdAt,
