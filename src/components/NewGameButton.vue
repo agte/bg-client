@@ -1,17 +1,9 @@
 <template>
-  <div>
-    <v-btn
-      @click="create()"
-      class="ml-auto"
-      color="accent"
-      fab
-    >
+  <div style="position: relative">
+    <v-btn @click="create()" absolute top right color="accent" fab>
       <v-icon>mdi-plus</v-icon>
     </v-btn>
-    <v-alert
-      v-if="error"
-      type="error"
-    >{{ error.message }}</v-alert>
+    <v-alert v-if="error" type="error">{{ error.message }}</v-alert>
   </div>
 </template>
 
