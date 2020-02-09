@@ -2,14 +2,17 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import store from '../store';
+
 import Home from '../views/Home.vue';
+import LaunchedGames from '../views/LaunchedGames.vue';
 import Login from '../views/Login.vue';
+import MyGames from '../views/MyGames.vue';
 import WaitingGames from '../views/WaitingGames.vue';
 
 Vue.use(VueRouter);
 
 const checkAccess = (to, from, next) => {
-  if (!store.getters.userId) {
+  if (!store.getters.authenticated) {
     next({
       name: 'Login',
       query: { redirectFrom: to.fullPath },
@@ -44,12 +47,14 @@ const routes = [
   {
     path: '/launched-games',
     name: 'LaunchedGames',
-    component: () => import('../views/LaunchedGames.vue'),
+    component: LaunchedGames,
+    beforeEnter: checkAccess,
   },
   {
     path: '/my-games',
     name: 'MyGames',
-    component: () => import('../views/MyGames.vue'),
+    component: MyGames,
+    beforeEnter: checkAccess,
   },
 ];
 
