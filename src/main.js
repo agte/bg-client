@@ -9,8 +9,11 @@ import '@mdi/font/css/materialdesignicons.css';
 
 Vue.config.productionTip = false;
 
-
 store.dispatch('auth/authenticate')
+  .catch((e) => {
+    if (e.code === 401) return;
+    throw e;
+  })
   .then(() => {
     new Vue({
       router,
