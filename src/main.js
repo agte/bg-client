@@ -14,6 +14,8 @@ store.dispatch('auth/authenticate')
     if (e.code === 401) return;
     throw e;
   })
+  // Предзагрузим список видов игр. Этот список будет меняться несколько раз в год - не больше.
+  .then(() => store.dispatch('gameKind/find', { paginate: false }))
   .then(() => {
     new Vue({
       router,

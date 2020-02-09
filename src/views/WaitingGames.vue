@@ -4,7 +4,7 @@
     <v-simple-table>
       <thead>
         <tr>
-          <th>Дата создания</th>
+          <th>Время создания</th>
           <th>Игроки</th>
           <th>Операции</th>
         </tr>

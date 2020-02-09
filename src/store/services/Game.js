@@ -16,6 +16,14 @@ class Game extends BaseModel {
       kind: '',
     };
   }
+
+  static setupInstance(data, { models }) {
+    const kind = models.api.GameKind.store.getters['gameKind/get'](data.kind);
+    return {
+      ...data,
+      kind,
+    };
+  }
 }
 
 const servicePath = 'game';

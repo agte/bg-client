@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>{{ gameKind.name }}</td>
+    <td>{{ game.kind.name }}</td>
     <td>{{ status }}</td>
     <td>{{ createdAt }}</td>
     <td>{{ players }}</td>
@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import { ref, isRef } from '@vue/composition-api';
 import useGame from '../mixins/useGame';
 
 export default {
@@ -40,24 +39,10 @@ export default {
       type: Object,
       required: true,
     },
-    kind: {
-      type: String,
-      required: false,
-    },
   },
 
   setup(props, context) {
-    const { $store } = context.root;
-    const gameKind = ref({ name: 'Unknown' });
-    $store.dispatch('gameKind/getFast', props.game.kind)
-      .then((resource) => {
-        gameKind.value = isRef(resource) ? resource.value : resource;
-      });
-
-    return {
-      ...useGame(props.game, context.root.$store),
-      gameKind,
-    };
+    return useGame(props.game, context.root.$store);
   },
 };
 </script>
