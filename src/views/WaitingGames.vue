@@ -19,7 +19,7 @@
 
 <script>
 import { useFind } from 'feathers-vuex';
-import { ref, isRef } from '@vue/composition-api';
+import { ref } from '@vue/composition-api';
 import NewGameButton from '../components/NewGameButton.vue';
 import WaitingGame from '../components/WaitingGame.vue';
 
@@ -32,7 +32,8 @@ export default {
   setup(props, context) {
     const { $store } = context.root;
     const gameKindId = context.root.$route.params.gameKind;
-    const gameKind = ref(null);
+    const gameKind = $store.getters['gameKind/get'](gameKindId);
+
     const searchQuery = ref({
       qid: 'waitingGames',
       query: {
@@ -43,12 +44,6 @@ export default {
         $sort: { createdAt: -1 },
       },
     });
-
-    $store.dispatch('gameKind/getFast', gameKindId)
-      .then((resource) => {
-        gameKind.value = isRef(resource) ? resource.value : resource;
-      });
-
     const { items: games } = useFind({
       model: context.root.$FeathersVuex.api.Game,
       params: searchQuery,
