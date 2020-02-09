@@ -1,8 +1,7 @@
 <template>
   <tr>
-    <td>{{ game.name }}</td>
     <td>{{ createdAt }}</td>
-    <td>{{ game.players.length }}</td>
+    <td>{{ players }}</td>
     <td>
       <v-btn v-if="!isIn" @click="join()" title="Присоединиться" color="primary" icon>
         <v-icon>mdi-plus</v-icon>
@@ -37,6 +36,7 @@ export default {
       createdAt: computed(() => (new Date(game.createdAt)).toLocaleTimeString()),
       isIn: computed(() => game.players.some((player) => player.user === userId)),
       isOwner: computed(() => game.owner === userId),
+      players: computed(() => game.players.map((player) => player.name).join(',')),
       join: async () => $store.dispatch('game/join', { game }),
       launch: async () => $store.dispatch('game/launch', { game }),
       leave: async () => $store.dispatch('game/leave', { game }),

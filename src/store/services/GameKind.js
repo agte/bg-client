@@ -20,6 +20,15 @@ const servicePlugin = makeServicePlugin({
   service: client.service(servicePath),
   servicePath,
   idField: 'id',
+  actions: {
+    getFast: async ({ getters, dispatch }, id) => {
+      const cached = getters.get(id);
+      if (cached) {
+        return cached;
+      }
+      return dispatch('get', id);
+    },
+  },
 });
 
 // Setup the client-side Feathers hooks.
