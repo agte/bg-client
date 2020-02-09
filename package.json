@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@feathersjs/authentication-client": "^4.5.0",
+    "@feathersjs/errors": "^4.5.1",
     "@feathersjs/feathers": "^4.5.0",
     "@feathersjs/socketio-client": "^4.5.0",
     "@mdi/font": "^4.8.95",
