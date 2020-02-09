@@ -67,43 +67,20 @@
     </v-app-bar>
 
     <v-content>
-      <router-view v-if="ready"></router-view>
+      <router-view></router-view>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import { ref, computed, onMounted } from '@vue/composition-api';
+import { computed } from '@vue/composition-api';
 
 export default {
   setup(props, context) {
     const { $store } = context.root;
-
-    const ready = ref(false);
-
-    const logout = async () => {
-      await $store.dispatch('auth/logout');
-      window.location.reload();
-    };
-
-    const authenticated = computed(() => !!$store.state.auth.user);
-
-    onMounted(async () => {
-      try {
-        await $store.dispatch('auth/authenticate');
-      } catch (e) {
-        if (e.code !== 401) {
-          console.error(e);
-        }
-      } finally {
-        ready.value = true;
-      }
-    });
-
     return {
-      ready,
-      logout,
-      authenticated,
+      logout: () => $store.dispatch('auth/logout').then(() => window.location.reload()),
+      authenticated: computed(() => $store.getters.authenticated),
     };
   },
 };

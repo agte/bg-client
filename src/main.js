@@ -9,9 +9,13 @@ import '@mdi/font/css/materialdesignicons.css';
 
 Vue.config.productionTip = false;
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render(h) { return h(App); },
-}).$mount('#app');
+
+store.dispatch('auth/authenticate')
+  .then(() => {
+    new Vue({
+      router,
+      store,
+      vuetify,
+      render(h) { return h(App); },
+    }).$mount('#app');
+  });
