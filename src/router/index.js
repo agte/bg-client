@@ -56,6 +56,12 @@ const routes = [
     component: MyGames,
     beforeEnter: checkAccess,
   },
+  {
+    path: '/play/tic-tac-toe/:id',
+    name: 'tic-tac-toe',
+    component: () => import('../views/boards/TicTacToe.vue'),
+    beforeEnter: checkAccess,
+  },
 ];
 
 const router = new VueRouter({

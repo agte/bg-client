@@ -35,6 +35,14 @@ const servicePlugin = makeServicePlugin({
   getters: {
   },
   actions: {
+    async getFast({ getters, dispatch }, id) {
+      const cached = getters.get(id);
+      if (cached) {
+        return cached;
+      }
+      return dispatch('get', id);
+    },
+
     async join({ rootGetters }, id) {
       if (!rootGetters.userId) {
         throw new Error('NotAuthenticated');

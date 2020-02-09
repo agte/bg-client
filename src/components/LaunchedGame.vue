@@ -29,7 +29,11 @@ export default {
   },
 
   setup(props, context) {
-    return useGame(props.game, context.root.$store);
+    return useGame({
+      game: props.game,
+      store: context.root.$store,
+      router: context.root.$router,
+    });
   },
 };
 </script>

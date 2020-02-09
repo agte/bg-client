@@ -33,6 +33,36 @@ export default new Vuex.Store({
         register: (context, data) => client.service('user').create(data),
       },
     },
+    gameplayState: {
+      namespaced: true,
+      state: {
+        map: {},
+      },
+      getters: {
+        get(state) {
+          return (id) => state.map[id];
+        },
+      },
+      actions: {
+        async load(context, id) {
+          const views = await client.service(`game/${id}/state`).find();
+          context.commit('add', { id, views });
+          return context.getters.get(id);
+        },
+      },
+      mutations: {
+        add(state, { id, views }) {
+          const viewMap = {};
+          views.forEach(({ id: playerId, state: view }) => {
+            viewMap[playerId] = view;
+          });
+          state.map = {
+            ...state.map,
+            [id]: viewMap,
+          };
+        },
+      },
+    },
   },
   plugins: services,
 });

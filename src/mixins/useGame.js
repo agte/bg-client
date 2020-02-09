@@ -9,7 +9,7 @@ const statuses = {
   aborted: 'Прервана',
 };
 
-export default function useGame(game, store) {
+export default function useGame({ game, store, router }) {
   const isOwner = computed(() => game.owner === store.getters.userId);
   const isIn = computed(() => {
     const { userId } = store.getters;
@@ -63,7 +63,7 @@ export default function useGame(game, store) {
   };
 
   const play = () => {
-    console.log('Should open a game board');
+    router.push({ name: game.kind.id, params: { id: game.id } });
   };
 
   const players = computed(() => game.players.map((player) => player.name).join(', '));
