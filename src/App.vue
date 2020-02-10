@@ -11,14 +11,7 @@
   <v-app>
     <v-app-bar app dark color="secondary">
       <router-link to="/" class="logo-link d-flex align-center mr-5">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+        <v-icon large>mdi-bee</v-icon>
         <v-toolbar-title class="font-weight-regular title white--text toolbar-title">
           Мухожук
         </v-toolbar-title>
