@@ -49,6 +49,15 @@ export default new Vuex.Store({
           context.commit('add', { id, views });
           return context.getters.get(id);
         },
+        async move(context, data) {
+          const {
+            game,
+            player,
+            action,
+            options,
+          } = data;
+          await client.service(`game/${game}/state`).patch(null, { player, action, options });
+        },
       },
       mutations: {
         add(state, { id, views }) {
@@ -61,8 +70,47 @@ export default new Vuex.Store({
             [id]: viewMap,
           };
         },
+        applyDiff(state, { id, player, diff }) {
+          const views = state.byGameId[id];
+          if (!views) {
+            return;
+          }
+          const view = views[player];
+          if (!view) {
+            return;
+          }
+          // TODO Разобраться как реализовать логику изменения состояния для каждой игры
+          if (diff.finished) {
+            view.finished = diff.finished;
+          }
+          diff.players.forEach((diffPlayer) => {
+            const playerIndex = view.players.findIndex((p) => p.id === diffPlayer.id);
+            if (playerIndex === -1) {
+              return;
+            }
+            Object.assign(view.players[playerIndex], diffPlayer);
+          });
+          diff.cells.forEach((diffCell) => {
+            const cellIndex = view.cells.findIndex((c) => c.id === diffCell.id);
+            if (cellIndex === -1) {
+              return;
+            }
+            Object.assign(view.cells[cellIndex], diffCell);
+          });
+        },
       },
     },
   },
-  plugins: services,
+  plugins: [
+    ...services,
+    (store) => {
+      client.service('game/:pid/state').on('move', ({ id, pid, diff }) => {
+        store.commit('gameplay/applyDiff', {
+          id: pid,
+          player: id,
+          diff,
+        });
+      });
+    },
+  ],
 });
