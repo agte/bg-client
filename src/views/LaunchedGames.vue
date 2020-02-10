@@ -28,8 +28,7 @@ export default {
   },
 
   setup(props, context) {
-    const { Game } = context.root.$FeathersVuex.api;
-    const params = ref({
+    const searchQuery = ref({
       qid: 'launchedGames',
       query: {
         status: 'launched',
@@ -38,8 +37,10 @@ export default {
         $sort: { createdAt: -1 },
       },
     });
-    const { items: games } = useFind({ model: Game, params });
-
+    const { items: games } = useFind({
+      model: context.root.$FeathersVuex.api.Game,
+      params: searchQuery,
+    });
     return { games };
   },
 };

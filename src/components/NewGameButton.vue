@@ -28,7 +28,6 @@ export default {
         await $store.dispatch('game/join', game.id);
         await $store.dispatch('game/startGathering', game.id);
       } catch (e) {
-        console.log(e);
         error.value = { message: e.message };
       }
     };

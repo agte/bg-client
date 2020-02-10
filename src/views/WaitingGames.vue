@@ -19,7 +19,7 @@
 
 <script>
 import { useFind } from 'feathers-vuex';
-import { ref } from '@vue/composition-api';
+import { reactive } from '@vue/composition-api';
 import NewGameButton from '../components/NewGameButton.vue';
 import WaitingGame from '../components/WaitingGame.vue';
 
@@ -34,7 +34,7 @@ export default {
     const gameKindId = context.root.$route.params.gameKind;
     const gameKind = $store.getters['gameKind/get'](gameKindId);
 
-    const searchQuery = ref({
+    const searchQuery = reactive({
       qid: 'waitingGames',
       query: {
         kind: gameKindId,
@@ -48,7 +48,6 @@ export default {
       model: context.root.$FeathersVuex.api.Game,
       params: searchQuery,
     });
-
     return { games, gameKind };
   },
 };
