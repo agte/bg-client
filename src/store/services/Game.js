@@ -18,10 +18,10 @@ class Game extends BaseModel {
   }
 
   static setupInstance(data, { models }) {
-    const kind = models.api.GameKind.store.getters['gameKind/get'](data.kind);
+    const kindInstance = models.api.GameKind.getFromStore(data.kind);
     return {
       ...data,
-      kind,
+      kindInstance,
     };
   }
 }

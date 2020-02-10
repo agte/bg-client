@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>{{ game.kind.name }}</td>
+    <td>{{ game.kindInstance.name }}</td>
     <td>{{ status }}</td>
     <td>{{ createdAt }}</td>
     <td>{{ players }}</td>

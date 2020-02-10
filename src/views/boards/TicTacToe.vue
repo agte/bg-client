@@ -1,6 +1,6 @@
 <template>
   <div v-if="ready">
-    <h1>{{ game.kind.name }}</h1>
+    <h1>{{ game.kindInstance.name }}</h1>
   </div>
 </template>
 
@@ -19,7 +19,6 @@ export default {
     $store.dispatch('game/getFast', gameId)
       .then((result) => {
         game.value = isRef(result) ? result.value : result;
-        console.log($store);
         return $store.dispatch('gameplayState/load', gameId);
       })
       .then((result) => {

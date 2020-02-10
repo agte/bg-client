@@ -63,7 +63,7 @@ export default function useGame({ game, store, router }) {
   };
 
   const play = () => {
-    router.push({ name: game.kind.id, params: { id: game.id } });
+    router.push({ name: game.kind, params: { id: game.id } });
   };
 
   const players = computed(() => game.players.map((player) => player.name).join(', '));
