@@ -23,21 +23,11 @@
 </template>
 
 <script>
-import { useFind } from 'feathers-vuex';
-
 export default {
   setup(props, context) {
-    const { items } = useFind({
-      model: context.root.$FeathersVuex.api.GameKind,
-      params: {
-        query: {
-          $sort: { createdAt: -1 },
-          $skip: 0,
-          $limit: 50,
-        },
-      },
-    });
-    return { items };
+    return {
+      items: context.root.$FeathersVuex.api.GameKind.findInStore({ query: {} }).data,
+    };
   },
 };
 </script>
