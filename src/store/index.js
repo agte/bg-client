@@ -33,14 +33,14 @@ export default new Vuex.Store({
         register: (context, data) => client.service('user').create(data),
       },
     },
-    gameplayState: {
+    gameplay: {
       namespaced: true,
       state: {
-        map: {},
+        byGameId: {},
       },
       getters: {
         get(state) {
-          return (id) => state.map[id];
+          return (id) => state.byGameId[id];
         },
       },
       actions: {
@@ -56,8 +56,8 @@ export default new Vuex.Store({
           views.forEach(({ id: playerId, state: view }) => {
             viewMap[playerId] = view;
           });
-          state.map = {
-            ...state.map,
+          state.byGameId = {
+            ...state.byGameId,
             [id]: viewMap,
           };
         },

@@ -1,13 +1,19 @@
 <template>
   <div v-if="ready">
-    <h1>{{ game.kindInstance.name }}</h1>
+    <h1 class="display-1 my-5 text-center">{{ game.kindInstance.name }}</h1>
+    <tic-tac-toe-gameplay :game="game" :gameplay="gameplay"></tic-tac-toe-gameplay>
   </div>
 </template>
 
 <script>
 import { ref, isRef } from '@vue/composition-api';
+import TicTacToeGameplay from '../../components/gameplays/TicTacToe.vue';
 
 export default {
+  components: {
+    TicTacToeGameplay,
+  },
+
   setup(props, context) {
     const { $store } = context.root;
 
@@ -19,7 +25,7 @@ export default {
     $store.dispatch('game/getFast', gameId)
       .then((result) => {
         game.value = isRef(result) ? result.value : result;
-        return $store.dispatch('gameplayState/load', gameId);
+        return $store.dispatch('gameplay/load', gameId);
       })
       .then((result) => {
         gameplay.value = result;
@@ -29,6 +35,7 @@ export default {
     return {
       ready,
       game,
+      gameplay,
     };
   },
 };
