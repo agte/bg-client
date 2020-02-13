@@ -22,9 +22,19 @@
         @click="play()"
         color="primary"
         icon
-        title="Открыть"
+        title="Открыть игровое поле"
       >
         <v-icon>mdi-login</v-icon>
+      </v-btn>
+
+      <v-btn
+        v-if="game.status === 'finished'"
+        @click="play()"
+        color="grey"
+        icon
+        title="Посмотреть игровое поле"
+      >
+        <v-icon>mdi-eye</v-icon>
       </v-btn>
     </td>
   </tr>
