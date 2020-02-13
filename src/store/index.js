@@ -54,9 +54,9 @@ export default new Vuex.Store({
             game,
             player,
             action,
-            options,
+            params,
           } = data;
-          await client.service(`game/${game}/state`).patch(null, { player, action, options });
+          await client.service(`game/${game}/state`).patch(null, { player, action, params });
         },
       },
       mutations: {
@@ -79,24 +79,7 @@ export default new Vuex.Store({
           if (!view) {
             return;
           }
-          // TODO Разобраться как реализовать логику изменения состояния для каждой игры
-          if (diff.finished) {
-            view.finished = diff.finished;
-          }
-          diff.players.forEach((diffPlayer) => {
-            const playerIndex = view.players.findIndex((p) => p.id === diffPlayer.id);
-            if (playerIndex === -1) {
-              return;
-            }
-            Object.assign(view.players[playerIndex], diffPlayer);
-          });
-          diff.cells.forEach((diffCell) => {
-            const cellIndex = view.cells.findIndex((c) => c.id === diffCell.id);
-            if (cellIndex === -1) {
-              return;
-            }
-            Object.assign(view.cells[cellIndex], diffCell);
-          });
+          Object.assign(view, diff);
         },
       },
     },

@@ -1,10 +1,16 @@
 <template>
   <v-container style="width: 360px">
     <v-row justify="center" dense>
-      <v-col v-for="cell in view.cells" :key="cell.id" cols="auto">
-        <v-card @click="putMark(cell)" :elevation="5" height="100" width="100">
-          <mark-cross v-if="cell.mark==='x'"></mark-cross>
-          <mark-circle v-if="cell.mark==='o'"></mark-circle>
+      <v-col v-for="(cell, index) in view.cells" :key="index" cols="auto">
+        <v-card v-if="canMove && !cell" @click="putMark(index)"
+          :elevation="5" height="100" width="100"
+        >
+          <mark-cross v-if="cell==='x'"></mark-cross>
+          <mark-circle v-if="cell==='o'"></mark-circle>
+        </v-card>
+        <v-card v-if="!canMove || cell" :elevation="5" height="100" width="100">
+          <mark-cross v-if="cell==='x'"></mark-cross>
+          <mark-circle v-if="cell==='o'"></mark-circle>
         </v-card>
       </v-col>
     </v-row>
@@ -44,58 +50,49 @@ export default {
   },
 
   setup(props, context) {
+    const { game, gameplay: views } = props;
     const { $store } = context.root;
 
     // крестики-нолики выглядят одинаково для каждой стороны -
     // там нет скрытых элементов, как в карточных играх,
     // так что берём первый попавшийся вид.
-    const view = computed(() => Object.values(props.gameplay)[0]);
+    const view = computed(() => Object.values(views)[0]);
 
     const players = computed(() => {
-      const playersMap = {};
-      view.value.players.forEach((player) => {
-        playersMap[player.id] = { ...player };
-      });
-      props.game.players.forEach((player) => {
+      const playersMap = { x: { id: 'x' }, o: { id: 'o' } };
+      game.players.forEach((player) => {
         playersMap[player.internalId].name = player.name;
         playersMap[player.internalId].user = player.user;
       });
-
       return playersMap;
     });
 
     const { userId } = $store.getters;
 
     const myCurrentPlayerId = computed(() => {
-      const myPlayersIds = props.game.players
+      const myPlayersIds = game.players
         .filter((player) => player.user === userId)
         .map((player) => player.internalId);
-      return myPlayersIds.find((id) => !!players.value[id].actions.length);
+      return myPlayersIds.includes(view.value.currentPlayer) ? view.value.currentPlayer : null;
     });
 
-    // test click
-    const putMark = (cell) => {
-      if (!myCurrentPlayerId.value) {
-        console.log('Сейчас не ваш ход');
-        return;
-      }
-      if (cell.mark !== '') {
-        return;
-      }
+    const canMove = computed(() => myCurrentPlayerId.value && !view.value.finished);
+
+    const putMark = (index) => {
       $store.dispatch('gameplay/move', {
-        game: props.game.id,
+        game: game.id,
         player: myCurrentPlayerId.value,
         action: 'mark',
-        options: {
-          id: cell.id,
-        },
+        params: { id: String(index) },
       });
     };
 
     return {
-      view,
+      canMove,
+      myCurrentPlayerId,
       players,
       putMark,
+      view,
     };
   },
 };
