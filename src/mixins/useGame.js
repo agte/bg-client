@@ -10,11 +10,10 @@ const statuses = {
 };
 
 export default function useGame({ game, store, router }) {
-  const isOwner = computed(() => game.owner === store.getters.userId);
-  const isIn = computed(() => {
-    const { userId } = store.getters;
-    return game.players.some((player) => player.user === userId);
-  });
+  const { userId } = store.getters;
+
+  const isOwner = computed(() => game.owner === userId);
+  const isIn = computed(() => game.players.some((player) => player.user === userId));
 
   const canJoin = computed(() => {
     if (game.status !== 'gathering' && !(game.status === 'draft' && isOwner)) {
@@ -27,6 +26,9 @@ export default function useGame({ game, store, router }) {
   });
 
   const canLaunch = computed(() => {
+    if (!isOwner.value) {
+      return false;
+    }
     if (game.status !== 'gathering') {
       return false;
     }
@@ -37,10 +39,10 @@ export default function useGame({ game, store, router }) {
   });
 
   const canLeave = computed(() => {
-    if (game.status !== 'gathering' && !(game.status === 'draft' && isOwner)) {
+    if (game.status !== 'gathering' && !(game.status === 'draft' && isOwner.value)) {
       return false;
     }
-    if (!isIn) {
+    if (!isIn.value) {
       return false;
     }
     return true;
