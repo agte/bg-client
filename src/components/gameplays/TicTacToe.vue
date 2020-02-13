@@ -1,5 +1,8 @@
 <template>
   <v-container style="width: 360px">
+    <v-alert v-if="view.finished" type="success">
+      Игра завершена
+    </v-alert>
     <v-row justify="center" dense>
       <v-col v-for="(cell, index) in view.cells" :key="index" cols="auto">
         <v-card v-if="canMove && !cell" @click="putMark(index)"
@@ -15,13 +18,21 @@
       </v-col>
     </v-row>
     <v-row justify="center" class="mt-2">
-      <v-col cols="auto" align-self="center">
+      <v-col cols="auto" align-self="center" class="text-center">
         <mark-cross style="width: 30px; height: 30px; vertical-align: middle"></mark-cross>
         {{ players.x.name }}
+        <br>
+        <div v-if="view.finished" style="height: 40px">
+          <v-icon v-if="view.winner === 'x'" large color="orange">mdi-crown</v-icon>
+        </div>
       </v-col>
-      <v-col cols="auto">
+      <v-col cols="auto" align-self="center" class="text-center">
         <mark-circle style="width: 30px; height: 30px; vertical-align: middle"></mark-circle>
         {{ players.o.name }}
+        <br>
+        <div v-if="view.finished" style="height: 40px">
+          <v-icon v-if="view.winner === 'o'" large color="orange">mdi-crown</v-icon>
+        </div>
       </v-col>
     </v-row>
   </v-container>
