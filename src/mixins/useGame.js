@@ -50,7 +50,21 @@ export default function useGame({ game, store, router }) {
 
   const canPlay = computed(() => game.status === 'launched' && isIn);
 
-  const createdAt = computed(() => (new Date(game.createdAt)).toLocaleTimeString());
+  const createdAt = computed(() => {
+    const then = new Date(game.createdAt);
+    const now = new Date();
+
+    const timeString = then.toLocaleTimeString();
+
+    let dateString = '';
+    if (then.toISOString().split('T')[0] === now.toISOString().split('T')[0]) {
+      dateString = 'Сегодня';
+    } else {
+      dateString = then.toLocaleDateString();
+    }
+
+    return `${dateString} ${timeString}`;
+  });
 
   const join = async () => store.dispatch('game/join', game.id);
 
