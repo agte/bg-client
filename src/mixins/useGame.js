@@ -14,6 +14,7 @@ export default function useGame({ game, store, router }) {
 
   const isOwner = computed(() => game.owner === userId);
   const isIn = computed(() => game.players.some((player) => player.user === userId));
+  const play = () => router.push({ name: game.kind, params: { id: game.id } });
 
   const canJoin = computed(() => {
     if (game.status !== 'gathering' && !(game.status === 'draft' && isOwner)) {
@@ -68,7 +69,10 @@ export default function useGame({ game, store, router }) {
 
   const join = async () => store.dispatch('game/join', game.id);
 
-  const launch = async () => store.dispatch('game/launch', game.id);
+  const launch = async () => {
+    await store.dispatch('game/launch', game.id);
+    play();
+  };
 
   const leave = async () => {
     await store.dispatch('game/leave', game.id);
@@ -76,10 +80,6 @@ export default function useGame({ game, store, router }) {
       await store.dispatch('game/stopGathering', game.id);
       await store.dispatch('game/remove', game.id);
     }
-  };
-
-  const play = () => {
-    router.push({ name: game.kind, params: { id: game.id } });
   };
 
   const players = computed(() => game.players.map((player) => player.name).join(', '));
