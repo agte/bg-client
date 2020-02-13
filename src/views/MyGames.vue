@@ -32,7 +32,7 @@ export default {
     const searchQuery = reactive({
       qid: 'myGames',
       query: {
-        owner: context.root.$store.getters.userId,
+        'players.user': context.root.$store.getters.userId,
         $limit: 50,
         $skip: 0,
         $sort: { createdAt: -1 },

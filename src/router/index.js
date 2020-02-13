@@ -4,7 +4,6 @@ import VueRouter from 'vue-router';
 import store from '../store';
 
 import Home from '../views/Home.vue';
-import LaunchedGames from '../views/LaunchedGames.vue';
 import Login from '../views/Login.vue';
 import MyGames from '../views/MyGames.vue';
 import WaitingGames from '../views/WaitingGames.vue';
@@ -42,12 +41,6 @@ const routes = [
     path: '/gameKind/:gameKind/games',
     name: 'WaitingGames',
     component: WaitingGames,
-    beforeEnter: checkAccess,
-  },
-  {
-    path: '/launched-games',
-    name: 'LaunchedGames',
-    component: LaunchedGames,
     beforeEnter: checkAccess,
   },
   {

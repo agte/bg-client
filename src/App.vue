@@ -21,7 +21,6 @@
 
       <v-btn v-if="authenticated" :to="{ name: 'Home' }" exact text>Начать играть</v-btn>
       <v-btn v-if="authenticated" :to="{ name: 'MyGames' }" text>Мои игры</v-btn>
-      <v-btn v-if="authenticated" :to="{ name: 'LaunchedGames' }" text>Идут сейчас</v-btn>
 
       <v-spacer></v-spacer>
 
