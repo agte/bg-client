@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container class="mx-auto" style="max-width: 1000px">
     <h1 class="display-1 my-5 text-center">Мои партии</h1>
     <v-simple-table>
       <thead>
