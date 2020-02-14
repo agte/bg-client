@@ -4,7 +4,7 @@ const statuses = {
   draft: 'Черновик',
   gathering: 'Поиск игроков',
   pending: 'Подготовка к запуску',
-  launched: 'Запущена',
+  running: 'Запущена',
   finished: 'Завершена',
   aborted: 'Прервана',
 };
@@ -49,7 +49,7 @@ export default function useGame({ game, store, router }) {
     return true;
   });
 
-  const canPlay = computed(() => game.status === 'launched' && isIn);
+  const canPlay = computed(() => game.status === 'running' && isIn);
 
   const createdAt = computed(() => {
     const then = new Date(game.createdAt);

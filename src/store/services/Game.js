@@ -55,7 +55,7 @@ const servicePlugin = makeServicePlugin({
     async launch(context, id) {
       return client
         .service(`game/${id}/status`)
-        .update(null, { value: 'launched' });
+        .update(null, { value: 'running' });
     },
 
     async leave({ getters, rootGetters, dispatch }, id) {

@@ -36,17 +36,21 @@ export default new Vuex.Store({
     gameplay: {
       namespaced: true,
       state: {
-        byGameId: {},
+        viewsByGameId: {},
       },
       getters: {
         get(state) {
-          return (id) => state.byGameId[id];
+          return (id) => state.viewsByGameId[id];
         },
       },
       actions: {
         async load(context, id) {
+          const storedViews = context.getters.get(id);
+          if (storedViews) {
+            return storedViews;
+          }
           const views = await client.service(`game/${id}/state`).find();
-          context.commit('add', { id, views });
+          context.commit('addViews', { id, views });
           return context.getters.get(id);
         },
         async move(context, data) {
@@ -60,26 +64,28 @@ export default new Vuex.Store({
         },
       },
       mutations: {
-        add(state, { id, views }) {
+        addViews(state, { id, views }) {
           const viewMap = {};
           views.forEach(({ id: playerId, state: view }) => {
             viewMap[playerId] = view;
           });
-          state.byGameId = {
-            ...state.byGameId,
+          state.viewsByGameId = {
+            ...state.viewsByGameId,
             [id]: viewMap,
           };
         },
-        applyDiff(state, { id, player, diff }) {
-          const views = state.byGameId[id];
-          if (!views) {
+        patchViews(state, { id, views: partialViews }) {
+          const storedViewMap = state.viewsByGameId[id];
+          if (!storedViewMap) {
             return;
           }
-          const view = views[player];
-          if (!view) {
-            return;
-          }
-          Object.assign(view, diff);
+          partialViews.forEach(({ id: playerId, state: partialView }) => {
+            const storedView = storedViewMap[playerId];
+            if (!storedView) {
+              return;
+            }
+            Object.assign(storedView, partialView); // apply diff
+          });
         },
       },
     },
@@ -87,12 +93,14 @@ export default new Vuex.Store({
   plugins: [
     ...services,
     (store) => {
-      client.service('game/:pid/state').on('move', ({ id, pid, diff }) => {
-        store.commit('gameplay/applyDiff', {
-          id: pid,
-          player: id,
-          diff,
-        });
+      const service = client.service('game/:pid/state');
+
+      service.on('ready', ({ pid, views }) => {
+        store.commit('gameplay/addViews', { id: pid, views });
+      });
+
+      service.on('move', ({ pid, views }) => {
+        store.commit('gameplay/patchViews', { id: pid, views });
       });
     },
   ],
