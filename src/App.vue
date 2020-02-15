@@ -38,6 +38,22 @@
     <v-content>
       <router-view></router-view>
     </v-content>
+
+    <v-dialog v-if="gameplayDialog.opened" value="gameplayDialog.opened" width="400">
+      <v-card>
+        <v-card-title class="justify-center">
+          Игра началась
+        </v-card-title>
+        <v-card-actions class="justify-center">
+          <v-btn @click="closeGameplayDialog()" color="secondary">
+            Игнорировать
+          </v-btn>
+          <v-btn @click="goToGameplay(gameplayDialog.game)" color="primary">
+            Открыть
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -46,10 +62,16 @@ import { computed } from '@vue/composition-api';
 
 export default {
   setup(props, context) {
-    const { $store } = context.root;
+    const { $store, $router } = context.root;
     return {
       logout: () => $store.dispatch('auth/logout').then(() => window.location.reload()),
       authenticated: computed(() => $store.getters.authenticated),
+      gameplayDialog: computed(() => $store.getters.gameplayDialog),
+      closeGameplayDialog: () => $store.dispatch('closeGameplayDialog'),
+      goToGameplay: (game) => {
+        $store.dispatch('closeGameplayDialog');
+        $router.push({ name: game.kind, params: { id: game.id } });
+      },
     };
   },
 };

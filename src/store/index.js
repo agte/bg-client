@@ -17,14 +17,35 @@ const services = requireModule
 
 export default new Vuex.Store({
   state: {
+    dialogs: {
+      goToGameplay: {
+        game: null,
+        opened: false,
+      },
+    },
   },
   getters: {
     userId: (state) => (state.auth.user ? state.auth.user.id : ''),
     authenticated: (state) => !!state.auth.user,
+    gameplayDialog: (state) => state.dialogs.goToGameplay,
   },
   mutations: {
+    gameplayDialogOpened(state, game) {
+      state.dialogs.goToGameplay.game = game;
+      state.dialogs.goToGameplay.opened = true;
+    },
+    gameplayDialogClosed(state) {
+      state.dialogs.goToGameplay.opened = false;
+      state.dialogs.goToGameplay.game = null;
+    },
   },
   actions: {
+    openGameplayDialog(context, { game }) {
+      context.commit('gameplayDialogOpened', game);
+    },
+    closeGameplayDialog(context) {
+      context.commit('gameplayDialogClosed');
+    },
   },
   modules: {
     user: {
@@ -95,8 +116,10 @@ export default new Vuex.Store({
     (store) => {
       const service = client.service('game/:pid/state');
 
-      service.on('ready', ({ pid, views }) => {
+      service.on('ready', async ({ pid, views }) => {
         store.commit('gameplay/addViews', { id: pid, views });
+        const game = await store.dispatch('game/getFast', pid);
+        store.dispatch('openGameplayDialog', { game });
       });
 
       service.on('move', ({ pid, views }) => {

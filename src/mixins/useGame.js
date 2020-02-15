@@ -71,7 +71,6 @@ export default function useGame({ game, store, router }) {
 
   const launch = async () => {
     await store.dispatch('game/launch', game.id);
-    play();
   };
 
   const leave = async () => {

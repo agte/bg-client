@@ -54,6 +54,9 @@ const routes = [
     name: 'tic-tac-toe',
     component: () => import('../views/boards/TicTacToe.vue'),
     beforeEnter: checkAccess,
+    meta: {
+      type: 'gameplay',
+    },
   },
 ];
 
