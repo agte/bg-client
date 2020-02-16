@@ -91,7 +91,7 @@ export default {
 
     const putMark = (index) => {
       $store.dispatch('gameplay/move', {
-        game: game.id,
+        id: game.id,
         player: myCurrentPlayerId.value,
         action: 'mark',
         params: { id: String(index) },

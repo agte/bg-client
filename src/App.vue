@@ -39,16 +39,16 @@
       <router-view></router-view>
     </v-content>
 
-    <v-dialog v-if="gameplayDialog.opened" value="gameplayDialog.opened" width="400">
+    <v-dialog v-if="invitationDialog.opened" value="invitationDialog.opened" width="400">
       <v-card>
         <v-card-title class="justify-center">
           Игра началась
         </v-card-title>
         <v-card-actions class="justify-center">
-          <v-btn @click="closeGameplayDialog()" color="secondary">
+          <v-btn @click="closeInvitationDialog()" color="secondary">
             Игнорировать
           </v-btn>
-          <v-btn @click="goToGameplay(gameplayDialog.game)" color="primary">
+          <v-btn @click="goToGameplay(invitationDialog.game)" color="primary">
             Открыть
           </v-btn>
         </v-card-actions>
@@ -66,10 +66,10 @@ export default {
     return {
       logout: () => $store.dispatch('auth/logout').then(() => window.location.reload()),
       authenticated: computed(() => $store.getters.authenticated),
-      gameplayDialog: computed(() => $store.getters.gameplayDialog),
-      closeGameplayDialog: () => $store.dispatch('closeGameplayDialog'),
+      invitationDialog: computed(() => $store.getters['gameplay/invitationDialog']),
+      closeInvitationDialog: () => $store.dispatch('gameplay/closeInvitationDialog'),
       goToGameplay: (game) => {
-        $store.dispatch('closeGameplayDialog');
+        $store.dispatch('gameplay/closeInvitationDialog');
         $router.push({ name: game.kind, params: { id: game.id } });
       },
     };
