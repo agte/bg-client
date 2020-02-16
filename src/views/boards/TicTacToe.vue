@@ -1,7 +1,7 @@
 <template>
   <div v-if="ready">
     <h1 class="display-1 mt-4 text-center">
-      {{ game.kindInstance.name }}
+      {{ game.name }}
     </h1>
     <tic-tac-toe-gameplay :game="game" :gameplay="gameplay"></tic-tac-toe-gameplay>
   </div>

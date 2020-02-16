@@ -23,13 +23,10 @@ export default {
     const error = ref(null);
 
     const create = async () => {
-      try {
-        const game = await $store.dispatch('game/create', { kind: props.kind });
-        await $store.dispatch('game/join', game.id);
-        await $store.dispatch('game/startGathering', game.id);
-      } catch (e) {
-        error.value = { message: e.message };
-      }
+      $store.dispatch('game/createFast', { kind: props.kind })
+        .catch((e) => {
+          error.value = { message: e.message };
+        });
     };
 
     const dismissError = () => {

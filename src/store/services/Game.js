@@ -1,6 +1,6 @@
 import client, { makeServicePlugin, BaseModel, errors } from '../../feathers';
 
-const { NotFound, Forbidden } = errors;
+const { NotAuthenticated, NotFound } = errors;
 
 class Game extends BaseModel {
   // constructor(data, options) {
@@ -17,11 +17,43 @@ class Game extends BaseModel {
     };
   }
 
-  static setupInstance(data, { models }) {
-    const kindInstance = models.api.GameKind.getFromStore(data.kind);
+  static setupInstance(data, { store, models }) {
+    const {
+      kind,
+      maxPlayers,
+      minPlayers,
+      owner,
+      players,
+      status,
+    } = data;
+    const { userId } = store.getters;
+
+    // Game kind properties
+    const kindInstance = models.api.GameKind.getFromStore(kind);
+    const name = kindInstance ? kindInstance.name : 'Неизвестно';
+
+    // User permissions
+    const isOwner = owner === userId;
+    const isMember = players.some((player) => player.user === userId);
+
+    const gatheringStatus = status === 'gathering';
+    const draftStatus = status === 'draft';
+    const canJoin = (gatheringStatus || (draftStatus && isOwner)) && (players.length < maxPlayers);
+    const canLeave = isMember && (gatheringStatus || (draftStatus && isOwner));
+    const canRun = isOwner && gatheringStatus && (players.length >= minPlayers);
+    const canPlay = isMember && (status === 'running');
+
     return {
       ...data,
-      kindInstance,
+      name,
+      user: {
+        isOwner,
+        isMember,
+        canJoin,
+        canLeave,
+        canRun,
+        canPlay,
+      },
     };
   }
 }
@@ -35,65 +67,35 @@ const servicePlugin = makeServicePlugin({
   getters: {
   },
   actions: {
-    async getFast({ getters, dispatch }, id) {
-      const cached = getters.get(id);
-      if (cached) {
-        return cached;
-      }
-      return dispatch('get', id);
+    createFast: async ({ dispatch }, { kind }) => {
+      const game = await dispatch('create', { kind });
+      await dispatch('join', game.id);
+      await client.service(`game/${game.id}/status`).update(null, { value: 'gathering' });
     },
 
-    async join({ rootGetters }, id) {
-      if (!rootGetters.userId) {
-        throw new Error('NotAuthenticated');
-      }
-      return client
-        .service(`game/${id}/players`)
-        .create({});
-    },
+    getFast: async ({ getters, dispatch }, id) => getters.get(id) || dispatch('get', id),
 
-    async launch(context, id) {
-      return client
-        .service(`game/${id}/status`)
-        .update(null, { value: 'running' });
-    },
+    join: async (context, id) => client.service(`game/${id}/players`).create({}),
 
-    async leave({ getters, rootGetters, dispatch }, id) {
+    leave: async ({ getters, rootGetters, dispatch }, id) => {
       const { userId } = rootGetters;
-      if (!userId) {
-        throw new Error('NotAuthenticated');
-      }
+      if (!userId) throw new NotAuthenticated();
 
-      let game = getters.get(id);
-      if (!game) {
-        game = await dispatch('get', id);
-      }
-
-      if (!game) {
-        throw new NotFound();
-      }
+      const game = getters.get(id) || await dispatch('get', id);
+      if (!game) throw new NotFound();
 
       const player = game.players.reverse().find((p) => p.user === userId);
-      if (!player) {
-        throw new Forbidden();
+      if (!player) throw new NotFound();
+      const lastMember = game.players.length === 1;
+
+      await client.service(`game/${id}/players`).remove(player.id);
+      if (lastMember) {
+        await client.service(`game/${game.id}/status`).update(null, { value: 'draft' });
+        await dispatch('remove', game.id);
       }
-
-      return client
-        .service(`game/${id}/players`)
-        .remove(player.id);
     },
 
-    async startGathering(context, id) {
-      return client
-        .service(`game/${id}/status`)
-        .update(null, { value: 'gathering' });
-    },
-
-    async stopGathering(context, id) {
-      return client
-        .service(`game/${id}/status`)
-        .update(null, { value: 'draft' });
-    },
+    run: async (context, id) => client.service(`game/${id}/status`).update(null, { value: 'running' }),
   },
 });
 
