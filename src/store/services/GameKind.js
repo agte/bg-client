@@ -21,13 +21,7 @@ const servicePlugin = makeServicePlugin({
   servicePath,
   idField: 'id',
   actions: {
-    getFast: async ({ getters, dispatch }, id) => {
-      const cached = getters.get(id);
-      if (cached) {
-        return cached;
-      }
-      return dispatch('get', id);
-    },
+    getFast: async ({ getters, dispatch }, id) => getters.get(id) || dispatch('get', id),
   },
 });
 

@@ -64,8 +64,6 @@ const servicePlugin = makeServicePlugin({
   service: client.service(servicePath),
   servicePath,
   idField: 'id',
-  getters: {
-  },
   actions: {
     createFast: async ({ dispatch }, { kind }) => {
       const game = await dispatch('create', { kind });

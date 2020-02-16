@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import useGame from '../mixins/useGame';
+import { computed } from '@vue/composition-api';
+import { prettyDatetime } from '../utils';
 
 export default {
   props: {
@@ -30,12 +31,15 @@ export default {
   },
 
   setup(props, context) {
-    console.log(props.game);
-    return useGame({
-      game: props.game,
-      store: context.root.$store,
-      router: context.root.$router,
-    });
+    const { game } = props;
+    const { $store } = context.root;
+    return {
+      createdAt: prettyDatetime(game.createdAt),
+      join: () => $store.dispatch('game/join', game.id),
+      leave: () => $store.dispatch('game/leave', game.id),
+      players: computed(() => game.players.map((player) => player.name).join(', ')),
+      run: () => $store.dispatch('game/run', game.id),
+    };
   },
 };
 </script>

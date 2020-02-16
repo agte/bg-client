@@ -34,7 +34,17 @@
 </template>
 
 <script>
-import useGame from '../mixins/useGame';
+import { computed } from '@vue/composition-api';
+import { prettyDatetime } from '../utils';
+
+const statuses = {
+  draft: 'Черновик',
+  gathering: 'Поиск игроков',
+  pending: 'Подготовка к запуску',
+  running: 'Запущена',
+  finished: 'Завершена',
+  aborted: 'Прервана',
+};
 
 export default {
   props: {
@@ -45,11 +55,17 @@ export default {
   },
 
   setup(props, context) {
-    return useGame({
-      game: props.game,
-      store: context.root.$store,
-      router: context.root.$router,
-    });
+    const { game } = props;
+    const { $router, $store } = context.root;
+    return {
+      createdAt: prettyDatetime(game.createdAt),
+      join: () => $store.dispatch('game/join', game.id),
+      leave: () => $store.dispatch('game/leave', game.id),
+      play: () => $router.push({ name: game.kind, params: { id: game.id } }),
+      players: computed(() => game.players.map((player) => player.name).join(', ')),
+      run: () => $store.dispatch('game/run', game.id),
+      status: computed(() => statuses[game.status]),
+    };
   },
 };
 </script>
