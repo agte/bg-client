@@ -11,7 +11,7 @@
           <mark-cross v-if="cell==='x'"></mark-cross>
           <mark-circle v-if="cell==='o'"></mark-circle>
         </v-card>
-        <v-card v-if="!canMove || cell" :elevation="5" height="100" width="100">
+        <v-card v-else :elevation="5" height="100" width="100">
           <mark-cross v-if="cell==='x'"></mark-cross>
           <mark-circle v-if="cell==='o'"></mark-circle>
         </v-card>
